@@ -19,54 +19,49 @@ def load_texture_pair(filename):
     ]
 
 
-class PlayerCharacter(arcade.Sprite):
+class SniperCharacter(arcade.Sprite):
     def __init__(self):
         super().__init__()
-        self.attack_timer = 0
-        self.chez = 0
+        self.xX_SIP_Xx = 0
         self.cur_texture = 0
         self.cur_attack_texture = 0
         self.character_face_direction = RIGHT_FACING
         self.scale = SPRITE_SCALING_PLAYER
 
-        self.health = 100
-
-        self.bam = True
-        self.pressed = True
+        self.bam = False
+        self.sniper_pressed = True
         self.jumping = False
 
 
-        self.idle_texture_pair = load_texture_pair("Sprites/Characters/Striker/Striker_idle.png")
+        self.idle_texture_pair = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun_idle.png")
         self.jump_texture_pair = load_texture_pair("Sprites/Characters/Jumping.png")
-
 
         # walking left and right
         self.walk_textureslr = []
         for i in range(5):
-            texture = load_texture_pair("Sprites/Characters/Striker/Striker Running" + str(i) + ".png")
+            texture = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun running" + str(i) + ".png")
             self.walk_textureslr.append(texture)
 
         self.attack_texture = []
-        for i in range(3):
-            texture = load_texture_pair("Sprites/Characters/Striker/punch" + str(i) + ".png")
+        for i in range(5):
+            texture = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun_attack" + str(i) + ".png")
             self.attack_texture.append(texture)
 
         self.texture = self.idle_texture_pair[0]
 
     def on_key_press(self, key: int):
 
-        if key == arcade.key.KEY_1:
-
-            if self.attack_timer == 0 or self.attack_timer < 0:
-                self.pressed = False
-                #print("1")
-                print(f'pressed:{self.pressed}')
+        if key == arcade.key.M:
+            self.sniper_pressed = False
+            self.xX_SIP_Xx = 1
+            #print("1")
+            print(f'pressed:{self.sniper_pressed}')
 
     def on_key_release(self, key: int):
 
-        if key == arcade.key.KEY_1:
-
-            print(f'releaded press:{self.pressed}')
+        if key == arcade.key.M:
+            self.sniper_pressed = False
+            print(f'releaded press:{self.sniper_pressed}')
 
 
 
@@ -75,17 +70,19 @@ class PlayerCharacter(arcade.Sprite):
     def update_animation(self, delta_time: float = 1/60):
         #print(self.pressed)
         #print(self.chez)
+        """if self.pressed:
+
+            self.bam = True
+            print(self.bam)"""
 
 
-        if self.attack_timer > 0:
-            self.attack_timer -= 1
 
         if self.change_x < 0 and self.character_face_direction == RIGHT_FACING:
             self.character_face_direction = LEFT_FACING
         elif self.change_x > 0 and self.character_face_direction == LEFT_FACING:
             self.character_face_direction = RIGHT_FACING
 
-        if self.change_x == 0 and self.change_y == 0 and self.pressed:
+        if self.change_x == 0 and self.change_y == 0 and self.sniper_pressed:
             self.texture = self.idle_texture_pair[self.character_face_direction]
             return
 
@@ -104,33 +101,18 @@ class PlayerCharacter(arcade.Sprite):
             return
 
 
-        if not self.pressed:
+        if not self.sniper_pressed:
 
-            self.chez += delta_time
+            self.xX_SIP_Xx += delta_time
 
-            print("check345")
+            print("Head Shot")
 
-            if self.chez >= 1/120:
-                self.chez = 0
+            if self.xX_SIP_Xx >= 1/60:
+                self.xX_SIP_Xx = 0
                 self.cur_attack_texture += 1
-                if self.cur_attack_texture > 2 * ATTACK_UPDATES_PER_FRAME:
+                if self.cur_attack_texture > 4 * ATTACK_UPDATES_PER_FRAME:
                     self.cur_attack_texture = 0
-                    self.pressed = True
+                    self.sniper_pressed = True
                     self.attack_timer = 20
                 self.texture = self.attack_texture[self.cur_attack_texture // ATTACK_UPDATES_PER_FRAME][
                     self.character_face_direction]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
