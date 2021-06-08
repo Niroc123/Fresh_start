@@ -68,8 +68,8 @@ class PlayerCharacter(arcade.Sprite):
 
             print(f'releaded press:{self.pressed}')
 
-
-
+    def on_draw(self):
+        return
 
 
     def update_animation(self, delta_time: float = 1/60):
