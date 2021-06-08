@@ -40,7 +40,7 @@ def load_texture_pair(filename):
     ]
 
 
-class MenuView(arcade.View):
+class TitleView(arcade.View):
     def __init__(self):
         super().__init__()
         self.title = None
@@ -60,11 +60,11 @@ class MenuView(arcade.View):
                          anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        character_choice_1 = Character_Choice_1()
+        character_choice_1 = Choice_1()
         self.window.show_view(character_choice_1)
 
 
-class Character_Choice_1(arcade.View):
+class Choice_1(arcade.View):
     def __init__(self):
         super().__init__()
         self.title = None
@@ -80,6 +80,8 @@ class Character_Choice_1(arcade.View):
 
         self.character_chosen_list = None
 
+        self.chosen = 7
+
     def on_show(self):
 
         arcade.set_background_color((58, 57, 53))
@@ -87,46 +89,47 @@ class Character_Choice_1(arcade.View):
 
         self.character_chosen_list = arcade.SpriteList()
 
-        self.Shotgun = arcade.Sprite("Sprites/Buttons/Shotgun button.png")
-        self.Shotgun.center_x = 400
-        self.Shotgun.center_y = 300
-        self.Shotgun.scale = 0.25
-        self.character_chosen_list.append(self.Shotgun)
-
         self.Striker = arcade.Sprite("Sprites/Buttons/Striker button.png")
-        self.Striker.center_x = 200
-        self.Striker.center_y = 550
+        self.Striker.center_x = 300
+        self.Striker.center_y = 150
         self.Striker.scale = 0.25
         self.character_chosen_list.append(self.Striker)
 
         self.Sniper = arcade.Sprite("Sprites/Buttons/Sniper button.png")
         self.Sniper.center_x = 200
-        self.Sniper.center_y = 150
+        self.Sniper.center_y = 350
         self.Sniper.scale = 0.25
         self.character_chosen_list.append(self.Sniper)
 
         self.Spear = arcade.Sprite("Sprites/Buttons/Spear button.png")
         self.Spear.center_x = 200
-        self.Spear.center_y = 350
+        self.Spear.center_y = 550
         self.Spear.scale = 0.25
         self.character_chosen_list.append(self.Spear)
 
+
+        self.Shotgun = arcade.Sprite("Sprites/Buttons/Shotgun button.png")
+        self.Shotgun.center_x = 900
+        self.Shotgun.center_y = 150
+        self.Shotgun.scale = 0.25
+        self.character_chosen_list.append(self.Shotgun)
+
         self.Sword = arcade.Sprite("Sprites/Buttons/Swordboard button.png")
-        self.Sword.center_x = 400
-        self.Sword.center_y = 100
+        self.Sword.center_x = 1000
+        self.Sword.center_y = 350
         self.Sword.scale = 0.25
         self.character_chosen_list.append(self.Sword)
 
         self.Daggers = arcade.Sprite("Sprites/Buttons/Daggers.png")
-        self.Daggers.center_x = 400
-        self.Daggers.center_y = 500
+        self.Daggers.center_x = 1000
+        self.Daggers.center_y = 550
         self.Daggers.scale = 0.25
         self.character_chosen_list.append(self.Daggers)
 
         self.Next = arcade.Sprite("Sprites/Next button.png")
-        self.Next.center_x = 650
-        self.Next.center_y = 50
-        self.Next.scale = 0.25
+        self.Next.center_x = 1150
+        self.Next.center_y = 100
+        self.Next.scale = 1
         self.character_chosen_list.append(self.Next)
 
 
@@ -135,39 +138,144 @@ class Character_Choice_1(arcade.View):
         self.character_chosen_list.draw()
 
 
-        arcade.draw_text("Click to advance", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.GRAY, font_size=20,
+        arcade.draw_text("PLayer 1", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.GRAY, font_size=40,
                          anchor_x="center")
 
     def on_mouse_press(self, x:float, y:float, _button, _modifiers):
-        instructions_view = InstructionView()
-        self.window.show_view(instructions_view)
+        """instructions_view = InstructionView()
+        self.window.show_view(instructions_view)"""
 
 
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
-            self.player.character_type = 0
-            self.dont = True
 
-        elif self.Striker in chosen:
-            print("Striker")
-            self.chosen = 0
-        if self.Shotgun in chosen:
-            print("Shotgun")
-            self.chosen = 1
-        elif self.Sniper in chosen:
-            print("Sniper")
-            self.chosen = 2
-        elif self.Sword in chosen:
-            print("Sword")
-            self.chosen = 3
-        elif self.Spear in chosen:
-            print("Spear")
-            self.chosen = 4
-        elif self.Daggers in chosen:
-            print("Daggers")
-            self.chosen = 5
-        elif self.Next in chosen:
-            self.window.show_view(GameView())
+
+            if self.Striker in chosen:
+                print("Striker")
+                self.chosen = 0
+            elif self.Shotgun in chosen:
+                print("Shotgun")
+                self.chosen = 1
+            elif self.Sniper in chosen:
+                print("Sniper")
+                self.chosen = 2
+            elif self.Sword in chosen:
+                print("Sword")
+                self.chosen = 3
+            elif self.Spear in chosen:
+                print("Spear")
+                self.chosen = 4
+            elif self.Daggers in chosen:
+                print("Daggers")
+                self.chosen = 5
+            elif self.Next in chosen:
+                self.window.show_view(Choice_2())
+
+class Choice_2(arcade.View):
+    def __init__(self):
+        super().__init__()
+        self.title = None
+
+        self.Next = None
+
+        self.Shotgun = None
+        self.Striker = None
+        self.Sword = None
+        self.Spear = None
+        self.Sniper = None
+        self.Daggers = None
+
+        self.character_chosen_list = None
+
+        self.chosen = 0
+
+    def on_show(self):
+
+        arcade.set_background_color((58, 57, 53))
+
+
+        self.character_chosen_list = arcade.SpriteList()
+
+        self.Striker = arcade.Sprite("Sprites/Buttons/Striker button.png")
+        self.Striker.center_x = 300
+        self.Striker.center_y = 150
+        self.Striker.scale = 0.25
+        self.character_chosen_list.append(self.Striker)
+
+        self.Sniper = arcade.Sprite("Sprites/Buttons/Sniper button.png")
+        self.Sniper.center_x = 200
+        self.Sniper.center_y = 350
+        self.Sniper.scale = 0.25
+        self.character_chosen_list.append(self.Sniper)
+
+        self.Spear = arcade.Sprite("Sprites/Buttons/Spear button.png")
+        self.Spear.center_x = 200
+        self.Spear.center_y = 550
+        self.Spear.scale = 0.25
+        self.character_chosen_list.append(self.Spear)
+
+        self.Shotgun = arcade.Sprite("Sprites/Buttons/Shotgun button.png")
+        self.Shotgun.center_x = 900
+        self.Shotgun.center_y = 150
+        self.Shotgun.scale = 0.25
+        self.character_chosen_list.append(self.Shotgun)
+
+        self.Sword = arcade.Sprite("Sprites/Buttons/Swordboard button.png")
+        self.Sword.center_x = 1000
+        self.Sword.center_y = 350
+        self.Sword.scale = 0.25
+        self.character_chosen_list.append(self.Sword)
+
+        self.Daggers = arcade.Sprite("Sprites/Buttons/Daggers.png")
+        self.Daggers.center_x = 1000
+        self.Daggers.center_y = 550
+        self.Daggers.scale = 0.25
+        self.character_chosen_list.append(self.Daggers)
+
+        self.Next = arcade.Sprite("Sprites/Next button.png")
+        self.Next.center_x = 1150
+        self.Next.center_y = 100
+        self.Next.scale = 1
+        self.character_chosen_list.append(self.Next)
+
+
+    def on_draw(self):
+        arcade.start_render()
+        self.character_chosen_list.draw()
+
+
+        arcade.draw_text("Player 2", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.GRAY, font_size=40,
+                         anchor_x="center")
+
+    def on_mouse_press(self, x:float, y:float, _button, _modifiers):
+        """instructions_view = InstructionView()
+        self.window.show_view(instructions_view)"""
+
+
+        chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
+        if len(chosen) > 0:
+
+
+            if self.Striker in chosen:
+                print("Striker")
+                self.chosen = 0
+            elif self.Shotgun in chosen:
+                print("Shotgun")
+                self.chosen = 1
+            elif self.Sniper in chosen:
+                print("Sniper")
+                self.chosen = 2
+            elif self.Sword in chosen:
+                print("Sword")
+                self.chosen = 3
+            elif self.Spear in chosen:
+                print("Spear")
+                self.chosen = 4
+            elif self.Daggers in chosen:
+                print("Daggers")
+                self.chosen = 5
+            elif self.Next in chosen:
+                self.window.show_view(InstructionView())
 
 
 
@@ -221,8 +329,7 @@ class GameView(arcade.View):
         self.view_bottom = 0
         self.background_list = None
         self.attack_texture = None
-        self.player_bullet_list = None
-        self.challenger_bullet_list = None
+
 
         self.player_jump_count = 0
         self.challenger_jump_count = 0
@@ -262,8 +369,10 @@ class GameView(arcade.View):
         self.physics_engine = None
         self.challenger_physics_engine = None
 
-        self.sniper_pressed = True
 
+
+        self.Choice_1 = Choice_1()
+        self.Choice_2 = Choice_2()
 
 
 
@@ -300,7 +409,7 @@ class GameView(arcade.View):
 
 
         self.player = Sniper.Character()
-        self.player.character_type = 1
+        self.player.character_type = self.Choice_1.chosen
         self.player.setup()
         self.player.center_x = 300
         self.player.center_y = 185
@@ -308,7 +417,7 @@ class GameView(arcade.View):
         self.player_list.append(self.player)
 
         self.challenger = Sniper.Character()
-        self.challenger.character_type = 0
+        self.challenger.character_type = self.Choice_2.chosen
         self.challenger.setup()
         self.challenger.center_x = 1100
         self.challenger.center_y = 185
@@ -688,7 +797,7 @@ class GameView(arcade.View):
 def main():
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     game_view = GameView()
-    menu_view = MenuView()
+    menu_view = TitleView()
     window.show_view(menu_view)
     arcade.run()
 
