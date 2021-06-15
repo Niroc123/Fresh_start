@@ -6,15 +6,14 @@ import arcade.color
 
 import Sniper
 from Sniper import *
-
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1250
 SCREEN_TITLE = "Platformer"
 VIEWPORT_MARGIN = 350
 
-HEALTHBAR_WIDTH = 175
-HEALTHBAR_HEIGHT = 20
-HEALTHBAR_OFFSET_Y = -10
+HEALTH_BAR_WIDTH = 175
+HEALTH_BAR_HEIGHT = 20
+HEALTH_BAR_OFFSET_Y = -10
 
 SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_WALL = 0.3
@@ -46,10 +45,8 @@ class TitleView(arcade.View):
         self.title = None
 
     def on_show(self):
-        color1 = (22, 22, 23)
         arcade.set_background_color((58, 57, 53))
         self.title = arcade.load_texture("sprites/Stick man Menu.png")
-
 
     def on_draw(self):
         arcade.start_render()
@@ -60,11 +57,11 @@ class TitleView(arcade.View):
                          anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        character_choice_1 = Choice_1()
+        character_choice_1 = Choice1()
         self.window.show_view(character_choice_1)
 
 
-class Choice_1(arcade.View):
+class Choice1(arcade.View):
     def __init__(self):
         super().__init__()
         self.title = None
@@ -80,14 +77,27 @@ class Choice_1(arcade.View):
 
         self.character_chosen_list = None
 
-        self.chosen = 7
+        self.chosen = 0
+        
+        self.selector = None
+        self.selector_list = None
 
+        self.selector_x = [300, 900, 200, 1000, 200, 1000]
+
+        self.selector_y = [150, 150, 350, 350, 550, 550]
+    
     def on_show(self):
 
         arcade.set_background_color((58, 57, 53))
 
-
         self.character_chosen_list = arcade.SpriteList()
+        self.selector_list = arcade.SpriteList()
+
+        self.selector = arcade.Sprite("Sprites/Choice selector.png")
+        self.selector.center_x = 100
+        self.selector.center_y = 111
+        self.selector.scale = 3
+        self.selector_list.append(self.selector)
 
         self.Striker = arcade.Sprite("Sprites/Buttons/Striker button.png")
         self.Striker.center_x = 300
@@ -106,7 +116,6 @@ class Choice_1(arcade.View):
         self.Spear.center_y = 550
         self.Spear.scale = 0.25
         self.character_chosen_list.append(self.Spear)
-
 
         self.Shotgun = arcade.Sprite("Sprites/Buttons/Shotgun button.png")
         self.Shotgun.center_x = 900
@@ -132,23 +141,27 @@ class Choice_1(arcade.View):
         self.Next.scale = 1
         self.character_chosen_list.append(self.Next)
 
-
     def on_draw(self):
         arcade.start_render()
         self.character_chosen_list.draw()
+        self.selector_list.draw()
 
-
-        arcade.draw_text("PLayer 1", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.GRAY, font_size=40,
+        arcade.draw_text("Player", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.GRAY, font_size=40,
                          anchor_x="center")
 
-    def on_mouse_press(self, x:float, y:float, _button, _modifiers):
+    def on_update(self, delta_time: float):
+        global chosen_1
+        chosen_1 = self.chosen
+
+        self.selector.center_x = self.selector_x[chosen_1] - 5
+        self.selector.center_y = self.selector_y[chosen_1] - 70
+
+    def on_mouse_press(self, x: float, y: float, _button, _modifiers):
         """instructions_view = InstructionView()
         self.window.show_view(instructions_view)"""
 
-
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
-
 
             if self.Striker in chosen:
                 print("Striker")
@@ -169,9 +182,10 @@ class Choice_1(arcade.View):
                 print("Daggers")
                 self.chosen = 5
             elif self.Next in chosen:
-                self.window.show_view(Choice_2())
+                self.window.show_view(Choice2())
 
-class Choice_2(arcade.View):
+
+class Choice2(arcade.View):
     def __init__(self):
         super().__init__()
         self.title = None
@@ -189,12 +203,26 @@ class Choice_2(arcade.View):
 
         self.chosen = 0
 
+        self.selector_list = None
+        self.selector = None
+        
+        self.selector_x = [300, 900, 200, 1000, 200, 1000]
+
+        self.selector_y = [150, 150, 350, 350, 550, 550]
+
     def on_show(self):
 
         arcade.set_background_color((58, 57, 53))
 
-
         self.character_chosen_list = arcade.SpriteList()
+
+        self.selector_list = arcade.SpriteList()
+
+        self.selector = arcade.Sprite("Sprites/Choice selector.png")
+        self.selector.center_x = 100
+        self.selector.center_y = 111
+        self.selector.scale = 3
+        self.selector_list.append(self.selector)
 
         self.Striker = arcade.Sprite("Sprites/Buttons/Striker button.png")
         self.Striker.center_x = 300
@@ -238,23 +266,28 @@ class Choice_2(arcade.View):
         self.Next.scale = 1
         self.character_chosen_list.append(self.Next)
 
-
     def on_draw(self):
         arcade.start_render()
+
         self.character_chosen_list.draw()
+        self.selector_list.draw()
 
-
-        arcade.draw_text("Player 2", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.GRAY, font_size=40,
+        arcade.draw_text("Challenger", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, arcade.color.GRAY, font_size=40,
                          anchor_x="center")
 
-    def on_mouse_press(self, x:float, y:float, _button, _modifiers):
+    def on_update(self, delta_time: float):
+        global chosen_2
+        chosen_2 = self.chosen
+
+        self.selector.center_x = self.selector_x[chosen_2] - 5
+        self.selector.center_y = self.selector_y[chosen_2] - 70
+
+    def on_mouse_press(self, x: float, y: float, _button, _modifiers):
         """instructions_view = InstructionView()
         self.window.show_view(instructions_view)"""
 
-
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
-
 
             if self.Striker in chosen:
                 print("Striker")
@@ -278,7 +311,6 @@ class Choice_2(arcade.View):
                 self.window.show_view(InstructionView())
 
 
-
 class InstructionView(arcade.View):
     def __init__(self):
         super().__init__()
@@ -291,13 +323,24 @@ class InstructionView(arcade.View):
         arcade.start_render()
         self.candle.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.4)
 
-        arcade.draw_text("Instructions Screen", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT - 200,
+        arcade.draw_text("Instructions Screen", SCREEN_WIDTH/2 , SCREEN_HEIGHT - 100,
                          arcade.color.WHITE, font_size=45, anchor_x="center")
-        arcade.draw_text("WASD for movement and left", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 + 50,
+
+        arcade.draw_text("Player 1", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT - 200,
+                         arcade.color.WHITE, font_size=30, anchor_x="center")
+        arcade.draw_text("Player 2", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 200,
+                         arcade.color.WHITE, font_size=30, anchor_x="center")
+
+        arcade.draw_text("Arrow keys for movement", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 300,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
-        arcade.draw_text("click on mouse to shoot and aim", SCREEN_WIDTH / 2 - 100,
-                         SCREEN_HEIGHT / 2 ,
+        arcade.draw_text("WASD keys for movement", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT - 300,
+                         arcade.color.WHITE, font_size=20, anchor_x="center")
+
+        arcade.draw_text("1  to attack ", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT - 400,
+                         arcade.color.WHITE, font_size=20, anchor_x="center")
+
+        arcade.draw_text("M  to attack", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 400,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
         arcade.draw_text("Click to advance", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150, arcade.color.GRAY, font_size=20,
@@ -316,9 +359,8 @@ class GameView(arcade.View):
         # Call the parent class initializer
         super().__init__()
 
-
         self.timer = 0
-        self.platform_list = None
+        self.wall_list = None
         self.player = None
         self.player_list = None
         self.challenger = None
@@ -330,12 +372,11 @@ class GameView(arcade.View):
         self.background_list = None
         self.attack_texture = None
 
-
         self.player_jump_count = 0
         self.challenger_jump_count = 0
 
-        self.player_maxhealth = None
-        self.challenger_maxhealth = None
+        self.player_max_health = None
+        self.challenger_max_health = None
 
         self.bullet_list = None
 
@@ -369,47 +410,69 @@ class GameView(arcade.View):
         self.physics_engine = None
         self.challenger_physics_engine = None
 
+        self.Choice_1 = Choice1()
+        self.Choice_2 = Choice2()
 
-
-        self.Choice_1 = Choice_1()
-        self.Choice_2 = Choice_2()
-
-
+        # jump
+        # damage
+        # Knockback
 
         self.character_info = {
          # Striker info
          0: {
                 0: 2,
-                1: 2
+                1: 2,
+                2: 25
             },
-         # Sniper info
+         # Shotgun info
          1: {
                 0: 1,
-                1: 1
-            }
+                1: 1,
+                2: 10
+            },
+         # sniper
+         2: {
+                0: 1,
+                1: 5,
+                2: 50
+            },
+         # sword
+         3: {
+                0: 2,
+                1: 2,
+                2: 10
 
+            },
+         # Spear
+         4: {
+                0: 2,
+                1: 2,
+                2: 50
+
+            },
+         # Dagger
+         5: {
+                0: 2,
+                1: 1,
+                2: 5
+
+         }
 
         }
 
-
     def setup(self):
 
-
         self.player_list = arcade.SpriteList()
-        self.player_bullet_list = arcade.SpriteList()
-
         self.challenger_list = arcade.SpriteList()
-        self.challenger_bullet_list = arcade.SpriteList()
 
         self.player_health = 20
         self.challenger_health = 20
 
-        self.player_maxhealth = 20
-        self.challenger_maxhealth = 20
-
+        self.player_max_health = 20
+        self.challenger_max_health = 20
 
         self.player = Sniper.Character()
-        self.player.character_type = self.Choice_1.chosen
+        self.player.character_type = chosen_1
         self.player.setup()
         self.player.center_x = 300
         self.player.center_y = 185
@@ -417,14 +480,14 @@ class GameView(arcade.View):
         self.player_list.append(self.player)
 
         self.challenger = Sniper.Character()
-        self.challenger.character_type = self.Choice_2.chosen
+        self.challenger.character_type = chosen_2
         self.challenger.setup()
         self.challenger.center_x = 1100
         self.challenger.center_y = 185
         self.challenger.scale = SPRITE_SCALING_PLAYER
         self.challenger_list.append(self.challenger)
 
-        self.platform_list = arcade.SpriteList()
+        self.wall_list = arcade.SpriteList()
         self.background = arcade.SpriteList()
 
         map_name = "Arena.tmx"
@@ -435,9 +498,9 @@ class GameView(arcade.View):
 
         background_layer_name = "background"
 
-        self.platform_list = arcade.tilemap.process_layer(map_object=my_map,
-                                                          layer_name=platform_layer_name,
-                                                          scaling=SPRITE_SCALING_WALL)
+        self.wall_list = arcade.tilemap.process_layer(map_object=my_map,
+                                                      layer_name=platform_layer_name,
+                                                      scaling=SPRITE_SCALING_WALL)
 
         self.background_list = arcade.tilemap.process_layer(my_map, background_layer_name, SPRITE_SCALING_WALL)
 
@@ -455,16 +518,16 @@ class GameView(arcade.View):
         wall.change_x = 1
         wall.change_y = 0
 
-        self.platform_list.append(wall)"""
+        self.wall_list.append(wall)"""
 
         self.physics_engine = \
             arcade.PhysicsEnginePlatformer(self.player,
-                                           self.platform_list,
+                                           self.wall_list,
                                            gravity_constant=GRAVITY, )
 
         self.challenger_physics_engine = \
             arcade.PhysicsEnginePlatformer(self.challenger,
-                                           self.platform_list,
+                                           self.wall_list,
                                            gravity_constant=GRAVITY, )
 
     def on_show(self):
@@ -478,11 +541,9 @@ class GameView(arcade.View):
         self.challenger.on_draw()
 
         # self.background_list.draw()
-        self.platform_list.draw()
+        self.wall_list.draw()
         self.player_list.draw()
         self.challenger_list.draw()
-        self.challenger_bullet_list.draw()
-        self.player_bullet_list.draw()
 
         output = f"Player Health: {self.player_health}"
         arcade.draw_text(output, self.view_left + 10, self.view_bottom + 600, arcade.color.RED, 20)
@@ -490,38 +551,38 @@ class GameView(arcade.View):
         output = f"Challenger Health: {self.challenger_health}"
         arcade.draw_text(output, self.view_left + 1010, self.view_bottom + 600, arcade.color.RED, 20)
 
-        output = f"Player cooldown : {self.player.attack_timer}"
+        output = f"Player cool down : {self.player.attack_timer}"
         arcade.draw_text(output, self.view_left + 10, self.view_bottom + 525, arcade.color.BLUE, 20)
 
-        output = f"Challenger cooldown: {self.challenger.attack_timer}"
+        output = f"Challenger cool down: {self.challenger.attack_timer}"
         arcade.draw_text(output, self.view_left + 990, self.view_bottom + 525, arcade.color.BLUE, 20)
 
         arcade.draw_rectangle_filled(center_x=self.view_left + 100,
-                                     center_y=self.view_bottom + 650 + HEALTHBAR_OFFSET_Y,
-                                     width=HEALTHBAR_WIDTH,
-                                     height=HEALTHBAR_HEIGHT,
+                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
+                                     width=HEALTH_BAR_WIDTH,
+                                     height=HEALTH_BAR_HEIGHT,
                                      color=arcade.color.RED)
 
-        health_width = HEALTHBAR_WIDTH * (self.player_health / self.player_maxhealth)
+        health_width = HEALTH_BAR_WIDTH * (self.player_health / self.player_max_health)
 
-        arcade.draw_rectangle_filled(center_x=self.view_left + 100 - 0.5 * (HEALTHBAR_WIDTH - health_width),
-                                     center_y=self.view_bottom + 650 + HEALTHBAR_OFFSET_Y,
+        arcade.draw_rectangle_filled(center_x=self.view_left + 100 - 0.5 * (HEALTH_BAR_WIDTH - health_width),
+                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
                                      width=health_width,
-                                     height=HEALTHBAR_HEIGHT,
+                                     height=HEALTH_BAR_HEIGHT,
                                      color=arcade.color.GREEN)
 
         arcade.draw_rectangle_filled(center_x=self.view_left + 1150,
-                                     center_y=self.view_bottom + 650 + HEALTHBAR_OFFSET_Y,
-                                     width=HEALTHBAR_WIDTH,
-                                     height=HEALTHBAR_HEIGHT,
+                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
+                                     width=HEALTH_BAR_WIDTH,
+                                     height=HEALTH_BAR_HEIGHT,
                                      color=arcade.color.RED)
 
-        health_width = HEALTHBAR_WIDTH * (self.challenger_health / self.challenger_maxhealth)
+        health_width = HEALTH_BAR_WIDTH * (self.challenger_health / self.challenger_max_health)
 
-        arcade.draw_rectangle_filled(center_x=self.view_left + 1150 + 0.5 * (HEALTHBAR_WIDTH - health_width),
-                                     center_y=self.view_bottom + 650 + HEALTHBAR_OFFSET_Y,
+        arcade.draw_rectangle_filled(center_x=self.view_left + 1150 + 0.5 * (HEALTH_BAR_WIDTH - health_width),
+                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
                                      width=health_width,
-                                     height=HEALTHBAR_HEIGHT,
+                                     height=HEALTH_BAR_HEIGHT,
                                      color=arcade.color.GREEN)
 
     def process_keychange(self):
@@ -559,10 +620,7 @@ class GameView(arcade.View):
         else:
             self.player.change_x = 0
 
-
-
             # challenger keys
-
         if self.challenger_up_pressed and not self.challenger_down_pressed:
             if self.physics_engine.is_on_ladder():
                 self.challenger.change_y = MOVEMENT_SPEED
@@ -571,8 +629,6 @@ class GameView(arcade.View):
                 self.challenger_jump_count += 1
                 if self.challenger_jump_count > self.character_info[self.challenger.character_type][0]:
                     self.challenger_jump_needs_reset = True
-
-
 
         elif self.challenger_down_pressed and not self.challenger_up_pressed:
             if self.challenger_physics_engine.is_on_ladder():
@@ -607,7 +663,7 @@ class GameView(arcade.View):
         self.player.on_key_press(key)
         self.challenger.on_key_press(key)
 
-        # playerkeys
+        # player keys
         if key == arcade.key.W:
             self.up_pressed = True
         elif key == arcade.key.S:
@@ -673,12 +729,11 @@ class GameView(arcade.View):
         self.physics_engine.update()
         self.player_list.update_animation()
         self.player_list.update()
-        self.player_bullet_list.update()
 
         self.challenger_physics_engine.update()
         self.challenger_list.update_animation()
         self.challenger_list.update()
-        self.challenger_bullet_list.update()
+
         changed = False
 
         if self.physics_engine.can_jump():
@@ -691,20 +746,16 @@ class GameView(arcade.View):
         else:
             self.challenger.can_jump = True
 
-
-
         if self.player.attack_timer > 0:
             self.player.attack_timer -= 1
 
         if self.challenger.attack_timer > 0:
             self.challenger.attack_timer -= 1
 
-
         if self.physics_engine.can_jump(y_distance=10):
 
             self.jump_needs_reset = False
             self.player_jump_count = 0
-
 
         if self.challenger_physics_engine.can_jump(y_distance=10):
 
@@ -717,6 +768,12 @@ class GameView(arcade.View):
             if len(challenger_hit) > 0:
                 bullet.remove_from_sprite_lists()
                 self.challenger_health -= self.character_info[self.player.character_type][1]
+                if self.player_face_direction == 0:
+                    self.challenger.center_x += self.character_info[self.player.character_type][2]
+
+                elif self.player_face_direction == 1:
+                    self.challenger.center_x -= self.character_info[self.player.character_type][2]
+
         # challenger damage to player
         for bullet in self.challenger.bullet_list:
             player_hit = arcade.check_for_collision_with_list(bullet, self.player_list)
@@ -724,17 +781,29 @@ class GameView(arcade.View):
                 bullet.remove_from_sprite_lists()
                 self.player_health -= self.character_info[self.challenger.character_type][1]
 
+                if self.challenger_face_direction == 0:
+                    self.player.center_x += self.character_info[self.challenger.character_type][2]
+
+                elif self.challenger_face_direction == 1:
+
+                    self.player.center_x -= self.character_info[self.challenger.character_type][2]
+
+
+        # knock back stuff
+
+
+
+        ##########
+
         for bullet in self.player.bullet_list:
-            plat_hit = arcade.check_for_collision_with_list(bullet, self.platform_list)
+            plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
             if len(plat_hit) > 0:
                 bullet.remove_from_sprite_lists()
 
         for bullet in self.challenger.bullet_list:
-            plat_hit = arcade.check_for_collision_with_list(bullet, self.platform_list)
+            plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
             if len(plat_hit) > 0:
                 bullet.remove_from_sprite_lists()
-
-
 
         if self.challenger_health < 0 or self.player_health < 0:
             print("we have a winner")
@@ -792,11 +861,8 @@ class GameView(arcade.View):
                                 SCREEN_HEIGHT + self.view_bottom)
 
 
-
-
 def main():
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    game_view = GameView()
     menu_view = TitleView()
     window.show_view(menu_view)
     arcade.run()

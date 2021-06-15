@@ -37,7 +37,7 @@ class Character(arcade.Sprite):
 
         self.character_type = 0
         self.attack_type = 0
-        self.list_of_attacks = [self.attack, self.attack_2]
+        self.list_of_attacks = [self.attack, self.attack_2, self.attack, self.attack_2, self.attack, self.attack_2]
 
 
 
@@ -59,31 +59,62 @@ class Character(arcade.Sprite):
         self.shotgun_pressed = True
         self.jumping = False
 
-        self.Shotgun_idle_texture_pair = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun_idle.png")
-        self.Striker_idle_texture_pair = load_texture_pair("Sprites/Characters/Striker/Striker_idle.png")
-        self.jump_texture_pair = load_texture_pair("Sprites/Characters/Jumping.png")
+        self.Striker_idle_texture_pair = load_texture_pair("Sprites/Characters/Striker/idle.png")
+        self.Shotgun_idle_texture_pair = load_texture_pair("Sprites/Characters/Shotgunner/idle.png")
+        self.Sniper_idle_texture_pair = load_texture_pair("Sprites/Characters/Sniper/idle.png")
+        self.Sword_idle_texture_pair = load_texture_pair("Sprites/Characters/SwordnShield/idle.png")
+        self.Spear_idle_texture_pair = load_texture_pair("Sprites/Characters/Spear/idle.png")
+        self.Dagger_idle_texture_pair = load_texture_pair("Sprites/Characters/Daggers/idle.png")
+
+        self.Striker_jump_texture_pair = load_texture_pair("Sprites/Characters/Striker/Jumping.png")
+        self.Shotgun_jump_texture_pair = load_texture_pair("Sprites/Characters/Shotgunner/Jumping.png")
+        self.Sniper_jump_texture_pair = load_texture_pair("Sprites/Characters/Sniper/Jumping.png")
+        self.Sword_jump_texture_pair = load_texture_pair("Sprites/Characters/SwordnShield/Jumping.png")
+        self.Spear_jump_texture_pair = load_texture_pair("Sprites/Characters/Spear/Jumping.png")
+        self.Dagger_jump_texture_pair = load_texture_pair("Sprites/Characters/Daggers/Jumping.png")
+
+
+
+        self.Striker_walk_textureslr = []
+        for i in range(5):
+            texture = load_texture_pair("Sprites/Characters/Striker/Run" + str(i) + ".png")
+            self.Striker_walk_textureslr.append(texture)
 
         # walking left and right
         self.Shotgun_walk_textureslr = []
         for i in range(5):
-            texture = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun running" + str(i) + ".png")
+            texture = load_texture_pair("Sprites/Characters/Shotgunner/Run" + str(i) + ".png")
             self.Shotgun_walk_textureslr.append(texture)
 
-        self.Striker_walk_textureslr = []
+        self.Sniper_walk_textureslr = []
         for i in range(5):
-            texture = load_texture_pair("Sprites/Characters/Striker/Striker Running" + str(i) + ".png")
-            self.Striker_walk_textureslr.append(texture)
+            texture = load_texture_pair("Sprites/Characters/Sniper/Run" + str(i) + ".png")
+            self.Sniper_walk_textureslr.append(texture)
 
-        self.Shotgun_attack_texture = []
+        self.Sword_walk_textureslr = []
         for i in range(5):
-            texture = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun_attack" + str(i) + ".png")
-            self.Shotgun_attack_texture.append(texture)
+            texture = load_texture_pair("Sprites/Characters/SwordnShield/Run" + str(i) + ".png")
+            self.Sword_walk_textureslr.append(texture)
+
+        self.Spear_walk_textureslr = []
+        for i in range(5):
+            texture = load_texture_pair("Sprites/Characters/Spear/Run" + str(i) + ".png")
+            self.Spear_walk_textureslr.append(texture)
+
+        self.Daggers_walk_textureslr = []
+        for i in range(5):
+            texture = load_texture_pair("Sprites/Characters/Daggers/Run" + str(i) + ".png")
+            self.Daggers_walk_textureslr.append(texture)
 
         self.Striker_attack_texture = []
         for i in range(3):
             texture = load_texture_pair("Sprites/Characters/Striker/punch" + str(i) + ".png")
             self.Striker_attack_texture.append(texture)
 
+        self.Shotgun_attack_texture = []
+        for i in range(5):
+            texture = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun_attack" + str(i) + ".png")
+            self.Shotgun_attack_texture.append(texture)
 
 
         if self.character_type == 0:
@@ -94,15 +125,34 @@ class Character(arcade.Sprite):
         self.setup()
 
         self.character_run = {
-            0: self.Striker_walk_textureslr[self.cur_texture // UPDATES_PER_FRAME][self.character_face_direction],
-            1: self.Shotgun_walk_textureslr[self.cur_texture // UPDATES_PER_FRAME][self.character_face_direction]
+            0: self.Striker_walk_textureslr,
+            1: self.Shotgun_walk_textureslr,
+            2: self.Sniper_walk_textureslr,
+            3: self.Sword_walk_textureslr,
+            4: self.Spear_walk_textureslr,
+            5: self.Daggers_walk_textureslr
+
         }
 
         self.character_idle = {
             0: self.Striker_idle_texture_pair,
-            1: self.Shotgun_idle_texture_pair
+            1: self.Shotgun_idle_texture_pair,
+            2: self.Sniper_idle_texture_pair,
+            3: self.Sword_idle_texture_pair,
+            4: self.Spear_idle_texture_pair,
+            5: self.Dagger_idle_texture_pair
         }
 
+        self.character_jump = {
+            0: self.Striker_jump_texture_pair,
+            1: self.Shotgun_jump_texture_pair,
+            2: self.Sniper_jump_texture_pair,
+            3: self.Sword_jump_texture_pair,
+            4: self.Spear_jump_texture_pair,
+            5: self.Dagger_jump_texture_pair
+
+
+        }
 
     def setup(self):  # setting up spritelists so player can detect them
 
@@ -152,28 +202,26 @@ class Character(arcade.Sprite):
             self.character_face_direction = RIGHT_FACING
 
         if self.change_x == 0 and self.change_y == 0 and self.shotgun_pressed:
-            if self.character_type == 0:
-                self.texture = self.Striker_idle_texture_pair[self.character_face_direction]
-            elif self.character_type == 1:
-                self.texture = self.Shotgun_idle_texture_pair[self.character_face_direction]
-            return
+            self.texture =self.character_idle[self.character_type][self.character_face_direction]
+
 
         if self.change_x < 0 or self.change_x > 0:
             # Walking animation
             self.cur_texture += 1
             if self.cur_texture > 3 * UPDATES_PER_FRAME:
                 self.cur_texture = 0
-            if self.character_type == 0:
-                self.texture = self.Striker_walk_textureslr[self.cur_texture // UPDATES_PER_FRAME][self.character_face_direction]
-            elif self.character_type == 1:
-                self.texture = self.Shotgun_walk_textureslr[self.cur_texture // UPDATES_PER_FRAME][
+            self.texture = self.character_run[self.character_type][self.cur_texture // UPDATES_PER_FRAME][
                     self.character_face_direction]
 
+
+
+
+
         if self.change_y > 0:
-            self.texture = self.jump_texture_pair[self.character_face_direction]
+            self.texture = self.character_jump[self.character_type][self.character_face_direction]
             return
         elif self.change_y < 0:
-            self.texture = self.jump_texture_pair[self.character_face_direction]
+            self.texture = self.character_jump[self.character_type][self.character_face_direction]
             return
 
         if not self.shotgun_pressed:
@@ -195,6 +243,7 @@ class Character(arcade.Sprite):
             self.attack_timer = 30
             bullet = arcade.Sprite()
             bullet.texture = arcade.load_texture("sprites/BLUEBALL.png")
+            bullet.scale = 0.5
             print("bing bong")
 
             # Position the bullet at the player's current location
@@ -204,7 +253,7 @@ class Character(arcade.Sprite):
 
                 bullet.center_x = p_start_x
                 bullet.center_y = p_start_y + 5
-                bullet.change_x = 13
+                bullet.change_x = 20
             elif self.character_face_direction == LEFT_FACING:
 
                 bullet.center_x = p_start_x
