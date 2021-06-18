@@ -37,7 +37,7 @@ class Character(arcade.Sprite):
 
         self.character_type = 0
         self.attack_type = 0
-        self.list_of_attacks = [self.attack, self.attack_2, self.attack, self.attack_2, self.attack, self.attack_2]
+        self.list_of_attacks = [self.attack3, self.attack_2, self.attack, self.attack_2, self.attack, self.attack_2]
 
 
 
@@ -253,7 +253,7 @@ class Character(arcade.Sprite):
 
                 bullet.center_x = p_start_x
                 bullet.center_y = p_start_y + 5
-                bullet.change_x = 20
+                bullet.change_x = 13
             elif self.character_face_direction == LEFT_FACING:
 
                 bullet.center_x = p_start_x
@@ -301,6 +301,31 @@ class Character(arcade.Sprite):
                 self.bullet_list.append(bullet)
             else:
                 return
+
+    def attack3(self):
+        # bullet = Bullet()
+        if self.attack_timer == 0:
+            self.attack_timer = 10
+            bullet = arcade.Sprite()
+            bullet.texture = arcade.load_texture("sprites/BLUEBALL.png")
+            bullet.scale = 0.5
+            print("bing bong")
+
+            # Position the bullet at the player's current location
+            p_start_x = self.center_x
+            p_start_y = self.center_y
+            if self.character_face_direction == RIGHT_FACING:
+
+                bullet.center_x = p_start_x + 30
+                bullet.center_y = p_start_y + 5
+                bullet.change_x = 0
+            elif self.character_face_direction == LEFT_FACING:
+
+                bullet.center_x = p_start_x - 30
+                bullet.center_y = p_start_y + 5
+                bullet.change_x = -0
+
+            self.bullet_list.append(bullet)
 
 class Bullet(arcade.Sprite):  # this is the attack sprite produced when attacking
     def __init__(self):

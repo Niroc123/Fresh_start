@@ -1,11 +1,9 @@
 # import arcade
 import arcade.color
 
-# import Striker
-# from Striker import *
 
-import Sniper
-from Sniper import *
+import Type
+from Type import *
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1250
 SCREEN_TITLE = "Platformer"
@@ -378,6 +376,9 @@ class GameView(arcade.View):
         self.player_max_health = None
         self.challenger_max_health = None
 
+        self.bingo = 0
+        self.ding =0
+
         self.bullet_list = None
 
         self.bullet_count = 1
@@ -471,7 +472,7 @@ class GameView(arcade.View):
         self.player_max_health = 20
         self.challenger_max_health = 20
 
-        self.player = Sniper.Character()
+        self.player = Type.Character()
         self.player.character_type = chosen_1
         self.player.setup()
         self.player.center_x = 300
@@ -479,7 +480,7 @@ class GameView(arcade.View):
         self.player.scale = SPRITE_SCALING_PLAYER
         self.player_list.append(self.player)
 
-        self.challenger = Sniper.Character()
+        self.challenger = Type.Character()
         self.challenger.character_type = chosen_2
         self.challenger.setup()
         self.challenger.center_x = 1100
@@ -724,7 +725,7 @@ class GameView(arcade.View):
 
     def on_update(self, delta_time):
 
-        print(self.player_jump_count)
+
 
         self.physics_engine.update()
         self.player_list.update_animation()
@@ -768,10 +769,10 @@ class GameView(arcade.View):
             if len(challenger_hit) > 0:
                 bullet.remove_from_sprite_lists()
                 self.challenger_health -= self.character_info[self.player.character_type][1]
-                if self.player_face_direction == 0:
+                if bullet.change_x > 0:
                     self.challenger.center_x += self.character_info[self.player.character_type][2]
 
-                elif self.player_face_direction == 1:
+                elif bullet.change_x < 0:
                     self.challenger.center_x -= self.character_info[self.player.character_type][2]
 
         # challenger damage to player
@@ -781,19 +782,14 @@ class GameView(arcade.View):
                 bullet.remove_from_sprite_lists()
                 self.player_health -= self.character_info[self.challenger.character_type][1]
 
-                if self.challenger_face_direction == 0:
-                    self.player.center_x += self.character_info[self.challenger.character_type][2]
-
-                elif self.challenger_face_direction == 1:
-
+                if bullet.change_x < 0:
                     self.player.center_x -= self.character_info[self.challenger.character_type][2]
 
+                elif bullet.change_x > 0:
 
-        # knock back stuff
+                    self.player.center_x += self.character_info[self.challenger.character_type][2]
 
 
-
-        ##########
 
         for bullet in self.player.bullet_list:
             plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
@@ -804,6 +800,32 @@ class GameView(arcade.View):
             plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
             if len(plat_hit) > 0:
                 bullet.remove_from_sprite_lists()
+
+        for bullet in self.player.bullet_list:
+            if self.player.character_type == 0:
+
+                self.bingo += delta_time
+                if self.bingo >= 1/60:
+                    self.bingo = 0
+                    self.ding += 1
+                    if self.ding > 5:
+                        self.ding = 0
+                        bullet.remove_from_sprite_lists()
+
+        for bullet in self.challenger.bullet_list:
+            if self.challenger.character_type == 0:
+
+                self.bingo += delta_time
+                if self.bingo >= 1/60:
+                    self.bingo = 0
+                    self.ding += 1
+                    if self.ding > 5:
+                        self.ding = 0
+                        bullet.remove_from_sprite_lists()
+
+
+
+
 
         if self.challenger_health < 0 or self.player_health < 0:
             print("we have a winner")
