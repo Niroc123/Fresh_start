@@ -479,7 +479,7 @@ class GameView(arcade.View):
         self.player.character_type = chosen_1
         self.player.setup()
         self.player.center_x = 300
-        self.player.center_y = 185
+        self.player.center_y = 300
         self.player.scale = SPRITE_SCALING_PLAYER
         self.player_list.append(self.player)
 
@@ -487,14 +487,14 @@ class GameView(arcade.View):
         self.challenger.character_type = chosen_2
         self.challenger.setup()
         self.challenger.center_x = 1100
-        self.challenger.center_y = 185
+        self.challenger.center_y = 300
         self.challenger.scale = SPRITE_SCALING_PLAYER
         self.challenger_list.append(self.challenger)
 
         self.wall_list = arcade.SpriteList()
         self.background = arcade.SpriteList()
 
-        map_name = "New Arena.tmx"
+        map_name = "Fresh_start.tmx"
 
         my_map = arcade.tilemap.read_tmx(map_name)
 
