@@ -37,22 +37,10 @@ class Character(arcade.Sprite):
 
         self.character_type = 0
         self.attack_type = 0
-        self.list_of_attacks = [self.attack3, self.attack_2, self.attack, self.attack_2, self.attack, self.attack_2]
-
-
-
-        """self.lots_of_attacks = {
-            0: self.attack,
-            1: self.attack_2
-        }"""
-
-
-
-
+        self.list_of_attacks = [self.attack, self.attack_2, self.attack3, self.attack4, self.attack5, self.attack6]
 
         self.primary_attack = None
 
-        self.bullet = Bullet()
         self.bullet_list = None
 
         self.bam = False
@@ -72,8 +60,6 @@ class Character(arcade.Sprite):
         self.Sword_jump_texture_pair = load_texture_pair("Sprites/Characters/SwordnShield/Jumping.png")
         self.Spear_jump_texture_pair = load_texture_pair("Sprites/Characters/Spear/Jumping.png")
         self.Dagger_jump_texture_pair = load_texture_pair("Sprites/Characters/Daggers/Jumping.png")
-
-
 
         self.Striker_walk_textureslr = []
         for i in range(5):
@@ -116,6 +102,25 @@ class Character(arcade.Sprite):
             texture = load_texture_pair("Sprites/Characters/Shotgunner/Shotgun_attack" + str(i) + ".png")
             self.Shotgun_attack_texture.append(texture)
 
+        self.Daggers_attack_texture = []
+        for i in range(4):
+            texture = load_texture_pair("Sprites/Characters/Daggers/Throw " + str(i) + ".png")
+            self.Daggers_attack_texture.append(texture)
+
+        self.Spear_attack_texture = []
+        for i in range(4):
+            texture = load_texture_pair("Sprites/Characters/Spear/stab " + str(i) + ".png")
+            self.Spear_attack_texture.append(texture)
+
+        self.Sword_attack_texture = []
+        for i in range(4):
+            texture = load_texture_pair("Sprites/Characters/SwordnShield/Slash " + str(i) + ".png")
+            self.Sword_attack_texture.append(texture)
+
+        self.Sniper_attack_texture = []
+        for i in range(2):
+            texture = load_texture_pair("Sprites/Characters/Sniper/Shoot " + str(i) + ".png")
+            self.Sniper_attack_texture.append(texture)
 
         if self.character_type == 0:
             self.texture = self.Striker_idle_texture_pair[self.character_face_direction]
@@ -160,24 +165,16 @@ class Character(arcade.Sprite):
         self.other_list = [-1, 0, 2, 1, -2]
         self.bullet_spread = [-0.2, 0.1, 0, 0.2, -0.1]
 
-
         self.bullet_list = arcade.SpriteList()
         self.primary_attack = self.list_of_attacks[self.character_type]
 
     def on_key_press(self, key: int):
 
-        if key == arcade.key.M:
-            #self.shotgun_pressed = False
-            #self.xX_SIP_Xx = 1
-            # Character.attack(self)
-            # print("1")
-            print(f'pressed:{self.shotgun_pressed}')
+        return
 
     def on_key_release(self, key: int):
 
-        if key == arcade.key.M:
-
-            print(f'releaded press:{self.shotgun_pressed}')
+        return
 
     def on_draw(self):
         self.bullet_list.draw()
@@ -189,12 +186,6 @@ class Character(arcade.Sprite):
         return
 
     def update_animation(self, delta_time: float = 1/60):
-        # print(self.pressed)
-        # print(self.chez)
-        """if self.pressed:
-
-            self.bam = True
-            print(self.bam)"""
 
         if self.change_x < 0 and self.character_face_direction == RIGHT_FACING:
             self.character_face_direction = LEFT_FACING
@@ -202,8 +193,7 @@ class Character(arcade.Sprite):
             self.character_face_direction = RIGHT_FACING
 
         if self.change_x == 0 and self.change_y == 0 and self.shotgun_pressed:
-            self.texture =self.character_idle[self.character_type][self.character_face_direction]
-
+            self.texture = self.character_idle[self.character_type][self.character_face_direction]
 
         if self.change_x < 0 or self.change_x > 0:
             # Walking animation
@@ -212,10 +202,6 @@ class Character(arcade.Sprite):
                 self.cur_texture = 0
             self.texture = self.character_run[self.character_type][self.cur_texture // UPDATES_PER_FRAME][
                     self.character_face_direction]
-
-
-
-
 
         if self.change_y > 0:
             self.texture = self.character_jump[self.character_type][self.character_face_direction]
@@ -240,33 +226,30 @@ class Character(arcade.Sprite):
     def attack(self):
         # bullet = Bullet()
         if self.attack_timer == 0:
-            self.attack_timer = 30
+            self.attack_timer = 10
             bullet = arcade.Sprite()
-            bullet.texture = arcade.load_texture("sprites/BLUEBALL.png")
-            bullet.scale = 0.5
-            print("bing bong")
+            bullet.texture = arcade.load_texture("sprites/red energy.png")
+            bullet.scale = 0.25
 
             # Position the bullet at the player's current location
             p_start_x = self.center_x
             p_start_y = self.center_y
             if self.character_face_direction == RIGHT_FACING:
 
-                bullet.center_x = p_start_x
+                bullet.center_x = p_start_x + 30
                 bullet.center_y = p_start_y + 5
-                bullet.change_x = 13
+                bullet.change_x = 10
             elif self.character_face_direction == LEFT_FACING:
 
-                bullet.center_x = p_start_x
+                bullet.center_x = p_start_x - 30
                 bullet.center_y = p_start_y + 5
-                bullet.change_x = -13
+                bullet.change_x = -10
 
             self.bullet_list.append(bullet)
 
-
-
-
         else:
             return
+
     def attack_2(self):
         # bullet = Bullet()
         if self.attack_timer == 0:
@@ -277,9 +260,8 @@ class Character(arcade.Sprite):
             self.attack_timer = 50
             for x in range(6):
                 bullet = arcade.Sprite()
-                bullet.texture = arcade.load_texture("sprites/energy -1.png.png")
+                bullet.texture = arcade.load_texture("sprites/orange energy.png")
                 bullet.scale = 0.05
-                print("bing bong")
 
                 # Position the bullet at the player's current location
                 p_start_x = self.center_x
@@ -305,12 +287,11 @@ class Character(arcade.Sprite):
     def attack3(self):
         # bullet = Bullet()
         if self.attack_timer == 0:
-            self.attack_timer = 10
+            self.attack_timer = 45
             bullet = arcade.Sprite()
-            bullet.texture = arcade.load_texture("sprites/BLUEBALL.png")
-            bullet.scale = 0.5
-            print("bing bong")
-# in
+            bullet.texture = arcade.load_texture("sprites/purple energy.png")
+            bullet.scale = 0.25
+
             # Position the bullet at the player's current location
             p_start_x = self.center_x
             p_start_y = self.center_y
@@ -318,16 +299,88 @@ class Character(arcade.Sprite):
 
                 bullet.center_x = p_start_x + 30
                 bullet.center_y = p_start_y + 5
-                bullet.change_x = 0
+                bullet.change_x = 25
             elif self.character_face_direction == LEFT_FACING:
 
                 bullet.center_x = p_start_x - 30
                 bullet.center_y = p_start_y + 5
-                bullet.change_x = -0
+                bullet.change_x = -25
 
             self.bullet_list.append(bullet)
 
-class Bullet(arcade.Sprite):  # this is the attack sprite produced when attacking
-    def __init__(self):
-        super().__init__()
-        self.texture = arcade.load_texture("sprites/energy -1.png.png")
+    def attack4(self):
+        # bullet = Bullet()
+        if self.attack_timer == 0:
+            self.attack_timer = 25
+            bullet = arcade.Sprite()
+
+            bullet.scale = 0.5
+
+            # Position the bullet at the player's current location
+            p_start_x = self.center_x
+            p_start_y = self.center_y
+            if self.character_face_direction == RIGHT_FACING:
+
+                bullet.texture = arcade.load_texture("sprites/yellow energy.png")
+                bullet.center_x = p_start_x + 30
+                bullet.center_y = p_start_y + 5
+                bullet.change_x = 10
+            elif self.character_face_direction == LEFT_FACING:
+
+                bullet.texture = arcade.load_texture("sprites/yellow energy.png", mirrored=True)
+                bullet.center_x = p_start_x - 30
+                bullet.center_y = p_start_y + 5
+                bullet.change_x = -10
+
+            self.bullet_list.append(bullet)
+
+    def attack5(self):
+        # bullet = Bullet()
+        if self.attack_timer == 0:
+            self.attack_timer = 35
+            bullet = arcade.Sprite()
+            bullet.scale = 0.5
+
+            # Position the bullet at the player's current location
+            p_start_x = self.center_x
+            p_start_y = self.center_y
+            if self.character_face_direction == RIGHT_FACING:
+
+                bullet.texture = arcade.load_texture("sprites/blue energy.png")
+                bullet.center_x = p_start_x + 45
+                bullet.center_y = p_start_y - 7
+                bullet.change_x = 10
+            elif self.character_face_direction == LEFT_FACING:
+
+                bullet.texture = arcade.load_texture("sprites/blue energy.png", mirrored=True)
+                bullet.center_x = p_start_x - 45
+                bullet.center_y = p_start_y - 7
+                bullet.change_x = -10
+
+            self.bullet_list.append(bullet)
+
+    def attack6(self):
+        # bullet = Bullet()
+        if self.attack_timer == 0:
+            self.attack_timer = 10
+            bullet = arcade.Sprite()
+
+            bullet.scale = 0.25
+
+            # Position the bullet at the player's current location
+            p_start_x = self.center_x
+            p_start_y = self.center_y
+            if self.character_face_direction == RIGHT_FACING:
+
+                bullet.texture = arcade.load_texture("sprites/green energy.png")
+                bullet.center_x = p_start_x + 30
+                bullet.center_y = p_start_y + 5
+                bullet.change_x = 10
+            elif self.character_face_direction == LEFT_FACING:
+
+                bullet.texture = arcade.load_texture("sprites/green energy.png", mirrored=True)
+                bullet.center_x = p_start_x - 30
+                bullet.center_y = p_start_y + 5
+                bullet.change_x = -10
+
+            self.bullet_list.append(bullet)

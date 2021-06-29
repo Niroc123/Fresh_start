@@ -1,4 +1,3 @@
-# import arcade
 import arcade.color
 
 
@@ -6,7 +5,7 @@ import Type
 from Type import *
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1250
-SCREEN_TITLE = "Platformer"
+SCREEN_TITLE = "Platform"
 VIEWPORT_MARGIN = 350
 
 HEALTH_BAR_WIDTH = 175
@@ -49,7 +48,7 @@ class TitleView(arcade.View):
     def on_draw(self):
         arcade.start_render()
 
-        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.4)
+        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2+50, 0.4)
 
         arcade.draw_text("Click to advance", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.GRAY, font_size=20,
                          anchor_x="center")
@@ -155,8 +154,6 @@ class Choice1(arcade.View):
         self.selector.center_y = self.selector_y[chosen_1] - 70
 
     def on_mouse_press(self, x: float, y: float, _button, _modifiers):
-        """instructions_view = InstructionView()
-        self.window.show_view(instructions_view)"""
 
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
@@ -281,8 +278,6 @@ class Choice2(arcade.View):
         self.selector.center_y = self.selector_y[chosen_2] - 70
 
     def on_mouse_press(self, x: float, y: float, _button, _modifiers):
-        """instructions_view = InstructionView()
-        self.window.show_view(instructions_view)"""
 
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
@@ -321,7 +316,7 @@ class InstructionView(arcade.View):
         arcade.start_render()
         self.candle.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.4)
 
-        arcade.draw_text("Instructions Screen", SCREEN_WIDTH/2 , SCREEN_HEIGHT - 100,
+        arcade.draw_text("Instructions Screen", SCREEN_WIDTH/2, SCREEN_HEIGHT - 100,
                          arcade.color.WHITE, font_size=45, anchor_x="center")
 
         arcade.draw_text("Player 1", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT - 200,
@@ -341,8 +336,8 @@ class InstructionView(arcade.View):
         arcade.draw_text("M  to attack", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 400,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
-        arcade.draw_text("Click to advance", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150, arcade.color.GRAY, font_size=20,
-                         anchor_x="center")
+        arcade.draw_text("Click to advance", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 200, arcade.color.WHITE,
+                         font_size=20, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         game_view = GameView()
@@ -377,7 +372,7 @@ class GameView(arcade.View):
         self.challenger_max_health = None
 
         self.bingo = 0
-        self.ding =0
+        self.ding = 0
 
         self.bullet_list = None
 
@@ -414,14 +409,22 @@ class GameView(arcade.View):
         self.Choice_1 = Choice1()
         self.Choice_2 = Choice2()
 
+        self.melee_offset = [[30, 0, 0, 60, 45, 0], [5, 0, 0, 5, -7, 0]]
+        # striker
+        # shotgun
+        # sniper
+        # sword
+        # spear
+        # dagger
+
         # jump
         # damage
-        # Knockback
+        # Knock back
 
         self.character_info = {
          # Striker info
          0: {
-                0: 2,
+                0: 3,
                 1: 2,
                 2: 25
             },
@@ -435,19 +438,19 @@ class GameView(arcade.View):
          2: {
                 0: 1,
                 1: 5,
-                2: 50
+                2: 60
             },
          # sword
          3: {
                 0: 2,
                 1: 2,
-                2: 10
+                2: 20
 
             },
          # Spear
          4: {
                 0: 2,
-                1: 2,
+                1: 3,
                 2: 50
 
             },
@@ -455,7 +458,7 @@ class GameView(arcade.View):
          5: {
                 0: 2,
                 1: 1,
-                2: 5
+                2: 10
 
          }
 
@@ -491,7 +494,7 @@ class GameView(arcade.View):
         self.wall_list = arcade.SpriteList()
         self.background = arcade.SpriteList()
 
-        map_name = "Arena.tmx"
+        map_name = "New Arena.tmx"
 
         my_map = arcade.tilemap.read_tmx(map_name)
 
@@ -590,7 +593,7 @@ class GameView(arcade.View):
         """
         Called when we change a key up/down or we move on/off a ladder.
         """
-        # playerkeys
+        # player keys
 
         # Process up/down
         if self.up_pressed and not self.down_pressed:
@@ -695,7 +698,7 @@ class GameView(arcade.View):
         self.player.on_key_release(key)
         self.challenger.on_key_release(key)
 
-        # playerkeys
+        # player keys
         if key == arcade.key.W:
             self.up_pressed = False
 
@@ -724,8 +727,6 @@ class GameView(arcade.View):
         self.process_keychange()
 
     def on_update(self, delta_time):
-
-
 
         self.physics_engine.update()
         self.player_list.update_animation()
@@ -771,9 +772,10 @@ class GameView(arcade.View):
                 self.challenger_health -= self.character_info[self.player.character_type][1]
                 if bullet.change_x > 0:
                     self.challenger.center_x += self.character_info[self.player.character_type][2]
-
+                    print("moved challenger")
                 elif bullet.change_x < 0:
                     self.challenger.center_x -= self.character_info[self.player.character_type][2]
+                    print("moved challenger")
 
         # challenger damage to player
         for bullet in self.challenger.bullet_list:
@@ -782,14 +784,12 @@ class GameView(arcade.View):
                 bullet.remove_from_sprite_lists()
                 self.player_health -= self.character_info[self.challenger.character_type][1]
 
-                if bullet.change_x < 0:
-                    self.player.center_x -= self.character_info[self.challenger.character_type][2]
-
-                elif bullet.change_x > 0:
-
+                if bullet.change_x > 0:
                     self.player.center_x += self.character_info[self.challenger.character_type][2]
-
-
+                    print("moved player")
+                elif bullet.change_x < 0:
+                    self.player.center_x -= self.character_info[self.challenger.character_type][2]
+                    print("moved player")
 
         for bullet in self.player.bullet_list:
             plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
@@ -802,33 +802,56 @@ class GameView(arcade.View):
                 bullet.remove_from_sprite_lists()
 
         for bullet in self.player.bullet_list:
-            if self.player.character_type == 0:
+            if self.player.character_type == 0 or self.player.character_type == 3 or self.player.character_type == 4:
+                if self.player_face_direction == RIGHT_FACING:
+
+                    bullet.center_x = self.player.center_x + self.melee_offset[0][self.player.character_type]
+                    bullet.center_y = self.player.center_y + self.melee_offset[1][self.player.character_type]
+                    bullet.change_x = 0
+                elif self.player_face_direction == LEFT_FACING:
+
+                    bullet.center_x = self.player.center_x - self.melee_offset[0][self.player.character_type]
+                    bullet.center_y = self.player.center_y + self.melee_offset[1][self.player.character_type]
+                    bullet.change_x = 0
 
                 self.bingo += delta_time
                 if self.bingo >= 1/60:
                     self.bingo = 0
                     self.ding += 1
-                    if self.ding > 5:
+                    if self.ding > 7:
                         self.ding = 0
                         bullet.remove_from_sprite_lists()
 
         for bullet in self.challenger.bullet_list:
-            if self.challenger.character_type == 0:
+            if self.challenger.character_type == 0 or self.challenger.character_type == 3 \
+                    or self.challenger.character_type == 4:
+
+                if self.challenger_face_direction == RIGHT_FACING:
+
+                    bullet.center_x = self.challenger.center_x + self.melee_offset[0][self.challenger.character_type]
+                    bullet.center_y = self.challenger.center_y + self.melee_offset[1][self.challenger.character_type]
+                    bullet.change_x = 0
+                elif self.challenger_face_direction == LEFT_FACING:
+
+                    bullet.center_x = self.challenger.center_x - self.melee_offset[0][self.challenger.character_type]
+                    bullet.center_y = self.challenger.center_y + self.melee_offset[1][self.challenger.character_type]
+                    bullet.change_x = 0
 
                 self.bingo += delta_time
                 if self.bingo >= 1/60:
                     self.bingo = 0
                     self.ding += 1
-                    if self.ding > 5:
+                    if self.ding > 7:
                         self.ding = 0
                         bullet.remove_from_sprite_lists()
 
+        if self.challenger_health == 0 or self.challenger_health < 0:
+            win_view = PlayerWinView()
+            self.window.show_view(win_view)
 
-
-
-
-        if self.challenger_health < 0 or self.player_health < 0:
-            print("we have a winner")
+        if self.player_health == 0 or self.player_health < 0:
+            win_view = ChallengerWinView()
+            self.window.show_view(win_view)
 
         # focusing the screen on the center between the players
 
@@ -881,6 +904,60 @@ class GameView(arcade.View):
                                 SCREEN_WIDTH + self.view_left,
                                 self.view_bottom,
                                 SCREEN_HEIGHT + self.view_bottom)
+
+
+class PlayerWinView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        self.title = None
+
+        self.winner_list = [
+            "Striker",
+            "Shotgunner",
+            "Sniper",
+            "SwordnShield",
+            "Spear",
+            "Daggers"
+        ]
+
+    def on_show(self):
+        arcade.set_background_color((58, 57, 53))
+        self.title = arcade.load_texture(f"sprites/Characters/" + self.winner_list[chosen_1] + "/idle.png")
+
+    def on_draw(self):
+
+        arcade.start_render()
+        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 200, 2)
+
+        arcade.draw_text("Player Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-400, arcade.color.WHITE, font_size=40,
+                         anchor_x="center")
+
+
+class ChallengerWinView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        self.title = None
+
+        self.winner_list = [
+            "Striker",
+            "Shotgunner",
+            "Sniper",
+            "SwordnShield",
+            "Spear",
+            "Daggers"
+        ]
+
+    def on_show(self):
+        arcade.set_background_color((58, 57, 53))
+        self.title = arcade.load_texture(f"sprites/Characters/" + self.winner_list[chosen_2] + "/idle.png")
+
+    def on_draw(self):
+
+        arcade.start_render()
+        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 200, 2)
+
+        arcade.draw_text("Challenger Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-400, arcade.color.WHITE, font_size=40,
+                         anchor_x="center")
 
 
 def main():
