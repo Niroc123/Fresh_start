@@ -8,9 +8,9 @@ SCREEN_WIDTH = 1250
 SCREEN_TITLE = "Platform"
 VIEWPORT_MARGIN = 350
 
-HEALTH_BAR_WIDTH = 175
-HEALTH_BAR_HEIGHT = 20
-HEALTH_BAR_OFFSET_Y = -10
+BAR_WIDTH = 175
+BAR_HEIGHT = 20
+BAR_OFFSET_Y = -10
 
 SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_WALL = 0.3
@@ -120,7 +120,7 @@ class Choice1(arcade.View):
         self.Shotgun.scale = 0.25
         self.character_chosen_list.append(self.Shotgun)
 
-        self.Sword = arcade.Sprite("Sprites/Buttons/Swordboard button.png")
+        self.Sword = arcade.Sprite("Sprites/Buttons/Sword board button.png")
         self.Sword.center_x = 1000
         self.Sword.center_y = 350
         self.Sword.scale = 0.25
@@ -243,7 +243,7 @@ class Choice2(arcade.View):
         self.Shotgun.scale = 0.25
         self.character_chosen_list.append(self.Shotgun)
 
-        self.Sword = arcade.Sprite("Sprites/Buttons/Swordboard button.png")
+        self.Sword = arcade.Sprite("Sprites/Buttons/Sword board button.png")
         self.Sword.center_x = 1000
         self.Sword.center_y = 350
         self.Sword.scale = 0.25
@@ -371,14 +371,19 @@ class GameView(arcade.View):
         self.player_max_health = None
         self.challenger_max_health = None
 
+        self.cover = arcade.Sprite()
+        self.cover_2 = arcade.Sprite()
+        self.cover_3 = arcade.Sprite()
+        self.cover_4 = arcade.Sprite()
+
         self.bingo = 0
         self.ding = 0
 
         self.bullet_list = None
 
         self.bullet_count = 1
-        self.screen_center_x = None
-        self.screen_center_y = None
+        self.screen_center_x = 0
+        self.screen_center_y = 0
         self.player_health = None
         self.challenger_health = None
         self.wall_rescale = 0
@@ -396,7 +401,6 @@ class GameView(arcade.View):
         self.challenger_down_pressed = False
         self.challenger_jump_needs_reset = False
         self.challenger_attack_key_pressed = False
-        self.background = None
 
         self.cur_texture = 0
         self.character_face_direction = RIGHT_FACING
@@ -409,7 +413,7 @@ class GameView(arcade.View):
         self.Choice_1 = Choice1()
         self.Choice_2 = Choice2()
 
-        self.melee_offset = [[30, 0, 0, 60, 45, 0], [5, 0, 0, 5, -7, 0]]
+        self.melee_offset = [[15, 0, 0, 35, 45, 0], [5, 0, 0, 5, -7, 0]]
         # striker
         # shotgun
         # sniper
@@ -420,45 +424,57 @@ class GameView(arcade.View):
         # jump
         # damage
         # Knock back
+        # health
+        # basic attack cool down
 
         self.character_info = {
          # Striker info
          0: {
                 0: 3,
                 1: 2,
-                2: 25
+                2: 25,
+                3: 30,
+                4: 10
             },
          # Shotgun info
          1: {
                 0: 1,
                 1: 1,
-                2: 10
+                2: 10,
+                3: 20,
+                4: 50
             },
          # sniper
          2: {
                 0: 1,
                 1: 5,
-                2: 60
+                2: 60,
+                3: 20,
+                4: 45
             },
          # sword
          3: {
                 0: 2,
-                1: 2,
-                2: 20
-
+                1: 3,
+                2: 30,
+                3: 25,
+                4: 25
             },
          # Spear
          4: {
                 0: 2,
                 1: 3,
-                2: 50
-
+                2: 50,
+                3: 25,
+                4: 35
             },
          # Dagger
          5: {
                 0: 2,
                 1: 1,
-                2: 10
+                2: 10,
+                3: 20,
+                4: 10
 
          }
 
@@ -469,11 +485,13 @@ class GameView(arcade.View):
         self.player_list = arcade.SpriteList()
         self.challenger_list = arcade.SpriteList()
 
-        self.player_health = 20
-        self.challenger_health = 20
+        self.background_list = arcade.SpriteList()
 
-        self.player_max_health = 20
-        self.challenger_max_health = 20
+        self.player_health = self.character_info[chosen_1][3]
+        self.challenger_health = self.character_info[chosen_2][3]
+
+        self.player_max_health = self.character_info[chosen_1][3]
+        self.challenger_max_health = self.character_info[chosen_2][3]
 
         self.player = Type.Character()
         self.player.character_type = chosen_1
@@ -491,30 +509,45 @@ class GameView(arcade.View):
         self.challenger.scale = SPRITE_SCALING_PLAYER
         self.challenger_list.append(self.challenger)
 
-        self.wall_list = arcade.SpriteList()
-        self.background = arcade.SpriteList()
+        self.cover = arcade.Sprite("Sprites/Special_cover.png", 1)
+        self.cover.center_x = self.view_left + 1100
+        self.cover.center_y = self.view_bottom + 680
+        self.background_list.append(self.cover)
 
-        map_name = "Fresh_start.tmx"
+        self.cover_2 = arcade.Sprite("Sprites/Special_cover.png", 1, mirrored=True)
+        self.cover_2.center_x = self.view_left + 100
+        self.cover_2.center_y = self.view_bottom + 680
+        self.background_list.append(self.cover_2)
+
+        self.cover_3 = arcade.Sprite("Sprites/Health Bar Cover.png", 1)
+        self.cover_3.center_x = self.view_left + 1100
+        self.cover_3.center_y = self.view_bottom + 720
+        self.background_list.append(self.cover_3)
+
+        self.cover_4 = arcade.Sprite("Sprites/Health Bar Cover.png", 1, mirrored=True)
+        self.cover_4.center_x = self.view_left + 100
+        self.cover_4.center_y = self.view_bottom + 720
+        self.background_list.append(self.cover_4)
+
+        self.wall_list = arcade.SpriteList()
+
+        map_name = "Arena.tmx"
 
         my_map = arcade.tilemap.read_tmx(map_name)
 
         platform_layer_name = "platform"
 
-        background_layer_name = "background"
-
         self.wall_list = arcade.tilemap.process_layer(map_object=my_map,
                                                       layer_name=platform_layer_name,
                                                       scaling=SPRITE_SCALING_WALL)
 
-        self.background_list = arcade.tilemap.process_layer(my_map, background_layer_name, SPRITE_SCALING_WALL)
-
         if my_map.background_color:
             arcade.set_background_color(my_map.background_color)
 
-        """wall = arcade.Sprite("Sprites/MovingPlat.png", SPRITE_SCALING_WALL)
-        wall.center_y = 150
+        wall = arcade.Sprite("Sprites/Platforms/MovingPlat.png", SPRITE_SCALING_WALL)
+        wall.center_y = 210
         wall.center_x = 250
-        wall.boundary_left = 500
+        wall.boundary_left = 400
         wall.boundary_right = 1100
 
         wall.boundary_top = 400
@@ -522,7 +555,20 @@ class GameView(arcade.View):
         wall.change_x = 1
         wall.change_y = 0
 
-        self.wall_list.append(wall)"""
+        self.wall_list.append(wall)
+
+        wall = arcade.Sprite("Sprites/Platforms/MovingPlat.png", SPRITE_SCALING_WALL)
+        wall.center_y = 300
+        wall.center_x = 205
+        wall.boundary_left = 100
+        wall.boundary_right = 620
+
+        wall.boundary_top = 600
+        wall.boundary_bottom = 75
+        wall.change_x = 0
+        wall.change_y = 1
+
+        self.wall_list.append(wall)
 
         self.physics_engine = \
             arcade.PhysicsEnginePlatformer(self.player,
@@ -544,52 +590,77 @@ class GameView(arcade.View):
 
         self.challenger.on_draw()
 
-        # self.background_list.draw()
         self.wall_list.draw()
         self.player_list.draw()
         self.challenger_list.draw()
 
-        output = f"Player Health: {self.player_health}"
-        arcade.draw_text(output, self.view_left + 10, self.view_bottom + 600, arcade.color.RED, 20)
-
-        output = f"Challenger Health: {self.challenger_health}"
-        arcade.draw_text(output, self.view_left + 1010, self.view_bottom + 600, arcade.color.RED, 20)
-
-        output = f"Player cool down : {self.player.attack_timer}"
-        arcade.draw_text(output, self.view_left + 10, self.view_bottom + 525, arcade.color.BLUE, 20)
-
-        output = f"Challenger cool down: {self.challenger.attack_timer}"
-        arcade.draw_text(output, self.view_left + 990, self.view_bottom + 525, arcade.color.BLUE, 20)
+        # player health
 
         arcade.draw_rectangle_filled(center_x=self.view_left + 100,
-                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
-                                     width=HEALTH_BAR_WIDTH,
-                                     height=HEALTH_BAR_HEIGHT,
+                                     center_y=self.view_bottom + 680 + BAR_OFFSET_Y,
+                                     width=BAR_WIDTH,
+                                     height=BAR_HEIGHT,
                                      color=arcade.color.RED)
 
-        health_width = HEALTH_BAR_WIDTH * (self.player_health / self.player_max_health)
+        health_width = BAR_WIDTH * (self.player_health / self.player_max_health)
 
-        arcade.draw_rectangle_filled(center_x=self.view_left + 100 - 0.5 * (HEALTH_BAR_WIDTH - health_width),
-                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
+        arcade.draw_rectangle_filled(center_x=self.view_left + 100 - 0.5 * (BAR_WIDTH - health_width),
+                                     center_y=self.view_bottom + 680 + BAR_OFFSET_Y,
                                      width=health_width,
-                                     height=HEALTH_BAR_HEIGHT,
-                                     color=arcade.color.GREEN)
+                                     height=BAR_HEIGHT,
+                                     color=arcade.color.GUPPIE_GREEN)
+
+        # challenger health bar
 
         arcade.draw_rectangle_filled(center_x=self.view_left + 1150,
-                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
-                                     width=HEALTH_BAR_WIDTH,
-                                     height=HEALTH_BAR_HEIGHT,
+                                     center_y=self.view_bottom + 680 + BAR_OFFSET_Y,
+                                     width=BAR_WIDTH,
+                                     height=BAR_HEIGHT,
                                      color=arcade.color.RED)
 
-        health_width = HEALTH_BAR_WIDTH * (self.challenger_health / self.challenger_max_health)
+        health_width = BAR_WIDTH * (self.challenger_health / self.challenger_max_health)
 
-        arcade.draw_rectangle_filled(center_x=self.view_left + 1150 + 0.5 * (HEALTH_BAR_WIDTH - health_width),
-                                     center_y=self.view_bottom + 650 + HEALTH_BAR_OFFSET_Y,
+        arcade.draw_rectangle_filled(center_x=self.view_left + 1150 + 0.5 * (BAR_WIDTH - health_width),
+                                     center_y=self.view_bottom + 680 + BAR_OFFSET_Y,
                                      width=health_width,
-                                     height=HEALTH_BAR_HEIGHT,
-                                     color=arcade.color.GREEN)
+                                     height=BAR_HEIGHT,
+                                     color=arcade.color.GUPPIE_GREEN)
 
-    def process_keychange(self):
+        # basic attack timers
+
+        bar_width = BAR_WIDTH * (self.player.attack_timer / self.character_info[chosen_1][4])
+        arcade.draw_rectangle_filled(center_x=self.view_left + 100 - 0.5 * (BAR_WIDTH - bar_width),
+                                     center_y=self.view_bottom + 650 + BAR_OFFSET_Y,
+                                     width=bar_width,
+                                     height=BAR_HEIGHT,
+                                     color=arcade.color.BLUE)
+
+        bar_width = BAR_WIDTH * (self.challenger.attack_timer / self.character_info[chosen_2][4])
+        arcade.draw_rectangle_filled(center_x=self.view_left + 1150 + 0.5 * (BAR_WIDTH - bar_width),
+                                     center_y=self.view_bottom + 650 + BAR_OFFSET_Y,
+                                     width=bar_width,
+                                     height=BAR_HEIGHT,
+                                     color=arcade.color.BLUE)
+
+        # special attack timers
+
+        bar_width = BAR_WIDTH * (-self.player.attack_timer / self.character_info[chosen_1][4])
+        arcade.draw_rectangle_filled(center_x=self.view_left + 188 - 0.5 * (BAR_WIDTH - bar_width),
+                                     center_y=self.view_bottom + 620 + BAR_OFFSET_Y,
+                                     width=bar_width + 175,
+                                     height=BAR_HEIGHT,
+                                     color=arcade.color.YELLOW)
+
+        bar_width = BAR_WIDTH * (-self.challenger.attack_timer / self.character_info[chosen_2][4])
+        arcade.draw_rectangle_filled(center_x=self.view_left + 1063 + 0.5 * (BAR_WIDTH - bar_width),
+                                     center_y=self.view_bottom + 620 + BAR_OFFSET_Y,
+                                     width=bar_width + 175,
+                                     height=BAR_HEIGHT,
+                                     color=arcade.color.YELLOW)
+
+        self.background_list.draw()
+
+    def process_key_change(self):
         """
         Called when we change a key up/down or we move on/off a ladder.
         """
@@ -602,7 +673,7 @@ class GameView(arcade.View):
             elif not self.jump_needs_reset:
                 self.player.change_y = JUMP_SPEED
                 self.player_jump_count += 1
-                if self.player_jump_count > self.character_info[self.player.character_type][0]:
+                if self.player_jump_count == self.character_info[self.player.character_type][0]:
                     self.jump_needs_reset = True
 
         elif self.down_pressed and not self.up_pressed:
@@ -631,7 +702,7 @@ class GameView(arcade.View):
             elif not self.challenger_jump_needs_reset:
                 self.challenger.change_y = JUMP_SPEED
                 self.challenger_jump_count += 1
-                if self.challenger_jump_count > self.character_info[self.challenger.character_type][0]:
+                if self.challenger_jump_count == self.character_info[self.challenger.character_type][0]:
                     self.challenger_jump_needs_reset = True
 
         elif self.challenger_down_pressed and not self.challenger_up_pressed:
@@ -691,7 +762,7 @@ class GameView(arcade.View):
         elif key == arcade.key.M:
             self.challenger_attack_key_pressed = True
 
-        self.process_keychange()
+        self.process_key_change()
 
     def on_key_release(self, key, modifiers):
 
@@ -724,9 +795,11 @@ class GameView(arcade.View):
         elif key == arcade.key.M:
             self.challenger_attack_key_pressed = False
 
-        self.process_keychange()
+        self.process_key_change()
 
     def on_update(self, delta_time):
+
+        self.background_list.update()
 
         self.physics_engine.update()
         self.player_list.update_animation()
@@ -735,6 +808,18 @@ class GameView(arcade.View):
         self.challenger_physics_engine.update()
         self.challenger_list.update_animation()
         self.challenger_list.update()
+
+        self.cover.center_x = self.view_left + 1150
+        self.cover.center_y = self.view_bottom + 610
+
+        self.cover_2.center_x = self.view_left + 100
+        self.cover_2.center_y = self.view_bottom + 610
+
+        self.cover_3.center_x = self.view_left + 1150
+        self.cover_3.center_y = self.view_bottom + 670
+
+        self.cover_4.center_x = self.view_left + 100
+        self.cover_4.center_y = self.view_bottom + 670
 
         changed = False
 
