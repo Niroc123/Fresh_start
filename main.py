@@ -548,10 +548,10 @@ class GameView(arcade.View):
         wall.center_y = 210
         wall.center_x = 250
         wall.boundary_left = 400
-        wall.boundary_right = 1100
+        wall.boundary_right = 1000
 
         wall.boundary_top = 400
-        wall.boundary_bottom = 100
+        wall.boundary_bottom = 150
         wall.change_x = 1
         wall.change_y = 0
 
@@ -561,10 +561,10 @@ class GameView(arcade.View):
         wall.center_y = 300
         wall.center_x = 205
         wall.boundary_left = 100
-        wall.boundary_right = 620
+        wall.boundary_right = 590
 
-        wall.boundary_top = 600
-        wall.boundary_bottom = 75
+        wall.boundary_top = 550
+        wall.boundary_bottom = 150
         wall.change_x = 0
         wall.change_y = 1
 
