@@ -43,7 +43,6 @@ class Character(arcade.Sprite):
 
         self.bullet_list = None
 
-        self.bam = False
         self.jumping = False
 
         self.attack_pressed = True
@@ -187,13 +186,13 @@ class Character(arcade.Sprite):
 
             }
 
-
     def setup(self):  # setting up spritelists so player can detect them
 
         self.list = [1, 4, 3, 5, 2]
         self.other_list = [-1, 0, 2, 1, -2]
         self.bullet_spread = [-0.2, 0.1, 0, 0.2, -0.1]
 
+        self.special_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.primary_attack = self.list_of_attacks[self.character_type]
 
@@ -239,7 +238,6 @@ class Character(arcade.Sprite):
             self.texture = self.character_jump[self.character_type][self.character_face_direction]
             return
 
-
         if not self.attack_pressed:
 
             self.xX_SIP_Xx += delta_time
@@ -250,7 +248,8 @@ class Character(arcade.Sprite):
                 if self.cur_attack_texture > self.character_attack_num[self.character_type] * ATTACK_UPDATES_PER_FRAME:
                     self.cur_attack_texture = 0
                     self.attack_pressed = True
-                self.texture = self.character_attack[self.character_type][self.cur_attack_texture // ATTACK_UPDATES_PER_FRAME][
+                self.texture = self.character_attack[self.character_type][self.cur_attack_texture //
+                                                                          ATTACK_UPDATES_PER_FRAME][
                     self.character_face_direction]
 
     def attack(self):
@@ -287,7 +286,6 @@ class Character(arcade.Sprite):
         if self.attack_timer == 0:
 
             self.attack_pressed = False
-
 
             self.attack_timer = 50
             for x in range(4):
@@ -423,5 +421,3 @@ class Character(arcade.Sprite):
 
             self.bullet_list.append(bullet)
 
-    def special_one(self):
-        return

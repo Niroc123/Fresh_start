@@ -8,6 +8,7 @@ SCREEN_WIDTH = 1250
 SCREEN_TITLE = "Platform"
 VIEWPORT_MARGIN = 350
 
+# the dimensions for the health and cool down bars
 BAR_WIDTH = 175
 BAR_HEIGHT = 20
 BAR_OFFSET_Y = -10
@@ -15,11 +16,12 @@ BAR_OFFSET_Y = -10
 SPRITE_SCALING_PLAYER = 0.4
 SPRITE_SCALING_WALL = 0.3
 
-
+# the character movement variables
 MOVEMENT_SPEED = 5
 JUMP_SPEED = 10
 GRAVITY = 0.6
 
+# the character facing
 RIGHT_FACING = 0
 LEFT_FACING = 1
 
@@ -59,6 +61,8 @@ class TitleView(arcade.View):
 
 
 class Choice1(arcade.View):
+    # the player character type choice view
+
     def __init__(self):
         super().__init__()
         self.title = None
@@ -79,6 +83,7 @@ class Choice1(arcade.View):
         self.selector = None
         self.selector_list = None
 
+        # the x and y for the character type buttons
         self.selector_x = [300, 900, 200, 1000, 200, 1000]
 
         self.selector_y = [150, 150, 350, 350, 550, 550]
@@ -90,48 +95,56 @@ class Choice1(arcade.View):
         self.character_chosen_list = arcade.SpriteList()
         self.selector_list = arcade.SpriteList()
 
+        # the white selector bar
         self.selector = arcade.Sprite("Sprites/Choice selector.png")
         self.selector.center_x = 100
         self.selector.center_y = 111
         self.selector.scale = 3
         self.selector_list.append(self.selector)
 
+        # the button for striker
         self.Striker = arcade.Sprite("Sprites/Buttons/Striker button.png")
         self.Striker.center_x = 300
         self.Striker.center_y = 150
         self.Striker.scale = 0.25
         self.character_chosen_list.append(self.Striker)
 
+        # the button for sniper
         self.Sniper = arcade.Sprite("Sprites/Buttons/Sniper button.png")
         self.Sniper.center_x = 200
         self.Sniper.center_y = 350
         self.Sniper.scale = 0.25
         self.character_chosen_list.append(self.Sniper)
 
+        # the button for spear
         self.Spear = arcade.Sprite("Sprites/Buttons/Spear button.png")
         self.Spear.center_x = 200
         self.Spear.center_y = 550
         self.Spear.scale = 0.25
         self.character_chosen_list.append(self.Spear)
 
+        # the button for shotgun
         self.Shotgun = arcade.Sprite("Sprites/Buttons/Shotgun button.png")
         self.Shotgun.center_x = 900
         self.Shotgun.center_y = 150
         self.Shotgun.scale = 0.25
         self.character_chosen_list.append(self.Shotgun)
 
+        # the button for sword
         self.Sword = arcade.Sprite("Sprites/Buttons/Sword board button.png")
         self.Sword.center_x = 1000
         self.Sword.center_y = 350
         self.Sword.scale = 0.25
         self.character_chosen_list.append(self.Sword)
 
+        # the button for daggers
         self.Daggers = arcade.Sprite("Sprites/Buttons/Daggers.png")
         self.Daggers.center_x = 1000
         self.Daggers.center_y = 550
         self.Daggers.scale = 0.25
         self.character_chosen_list.append(self.Daggers)
 
+        # the button for the challenger type choice view
         self.Next = arcade.Sprite("Sprites/Next button.png")
         self.Next.center_x = 1150
         self.Next.center_y = 100
@@ -150,11 +163,13 @@ class Choice1(arcade.View):
         global chosen_1
         chosen_1 = self.chosen
 
+        # the position for the buttons
         self.selector.center_x = self.selector_x[chosen_1] - 5
         self.selector.center_y = self.selector_y[chosen_1] - 70
 
     def on_mouse_press(self, x: float, y: float, _button, _modifiers):
 
+        # prints to the console what character type you selected and changes the global to the  chosen type
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
 
@@ -181,6 +196,8 @@ class Choice1(arcade.View):
 
 
 class Choice2(arcade.View):
+    # the challenger character type choice view
+
     def __init__(self):
         super().__init__()
         self.title = None
@@ -213,48 +230,56 @@ class Choice2(arcade.View):
 
         self.selector_list = arcade.SpriteList()
 
+        # the selector bar
         self.selector = arcade.Sprite("Sprites/Choice selector.png")
         self.selector.center_x = 100
         self.selector.center_y = 111
         self.selector.scale = 3
         self.selector_list.append(self.selector)
 
+        # the button for striker
         self.Striker = arcade.Sprite("Sprites/Buttons/Striker button.png")
         self.Striker.center_x = 300
         self.Striker.center_y = 150
         self.Striker.scale = 0.25
         self.character_chosen_list.append(self.Striker)
 
+        # the button for sniper
         self.Sniper = arcade.Sprite("Sprites/Buttons/Sniper button.png")
         self.Sniper.center_x = 200
         self.Sniper.center_y = 350
         self.Sniper.scale = 0.25
         self.character_chosen_list.append(self.Sniper)
 
+        # the button for spear
         self.Spear = arcade.Sprite("Sprites/Buttons/Spear button.png")
         self.Spear.center_x = 200
         self.Spear.center_y = 550
         self.Spear.scale = 0.25
         self.character_chosen_list.append(self.Spear)
 
+        # the button for shotgun
         self.Shotgun = arcade.Sprite("Sprites/Buttons/Shotgun button.png")
         self.Shotgun.center_x = 900
         self.Shotgun.center_y = 150
         self.Shotgun.scale = 0.25
         self.character_chosen_list.append(self.Shotgun)
 
+        # the button for sword
         self.Sword = arcade.Sprite("Sprites/Buttons/Sword board button.png")
         self.Sword.center_x = 1000
         self.Sword.center_y = 350
         self.Sword.scale = 0.25
         self.character_chosen_list.append(self.Sword)
 
+        # the button for daggers
         self.Daggers = arcade.Sprite("Sprites/Buttons/Daggers.png")
         self.Daggers.center_x = 1000
         self.Daggers.center_y = 550
         self.Daggers.scale = 0.25
         self.character_chosen_list.append(self.Daggers)
 
+        # the button for
         self.Next = arcade.Sprite("Sprites/Next button.png")
         self.Next.center_x = 1150
         self.Next.center_y = 100
@@ -279,6 +304,7 @@ class Choice2(arcade.View):
 
     def on_mouse_press(self, x: float, y: float, _button, _modifiers):
 
+        # prints to the console what character type you selected and changes the global to the  chosen type
         chosen = arcade.get_sprites_at_point((x, y), self.character_chosen_list)
         if len(chosen) > 0:
 
@@ -305,6 +331,7 @@ class Choice2(arcade.View):
 
 
 class InstructionView(arcade.View):
+    """The instructions view"""
     def __init__(self):
         super().__init__()
         self.candle = arcade.load_texture("sprites/Instructions -1.png.png")
@@ -345,13 +372,14 @@ class InstructionView(arcade.View):
 
 
 class GameView(arcade.View):
-    """ This class represents the main window of the game. """
+    """Main window of the game."""
 
     def __init__(self):
         """ Initializer """
         # Call the parent class initializer
         super().__init__()
 
+        self.window.center_window()
         self.timer = 0
         self.wall_list = None
         self.player = None
@@ -414,6 +442,7 @@ class GameView(arcade.View):
         self.Choice_2 = Choice2()
 
         self.melee_offset = [[15, 0, 0, 35, 45, 0], [5, 0, 0, 5, -7, 0]]
+        # the input orders of the dictionary
         # striker
         # shotgun
         # sniper
@@ -470,7 +499,7 @@ class GameView(arcade.View):
             },
          # Dagger
          5: {
-                0: 2,
+                0: 3,
                 1: 1,
                 2: 10,
                 3: 20,
@@ -487,12 +516,15 @@ class GameView(arcade.View):
 
         self.background_list = arcade.SpriteList()
 
+        # character health based on character type
         self.player_health = self.character_info[chosen_1][3]
         self.challenger_health = self.character_info[chosen_2][3]
 
+        # character health based on character type for the health bar generation
         self.player_max_health = self.character_info[chosen_1][3]
         self.challenger_max_health = self.character_info[chosen_2][3]
 
+        # the player character
         self.player = Type.Character()
         self.player.character_type = chosen_1
         self.player.setup()
@@ -501,6 +533,7 @@ class GameView(arcade.View):
         self.player.scale = SPRITE_SCALING_PLAYER
         self.player_list.append(self.player)
 
+        # the challenger character
         self.challenger = Type.Character()
         self.challenger.character_type = chosen_2
         self.challenger.setup()
@@ -509,6 +542,7 @@ class GameView(arcade.View):
         self.challenger.scale = SPRITE_SCALING_PLAYER
         self.challenger_list.append(self.challenger)
 
+        # all the self.covers are the overlays for the health bars and cool down bars
         self.cover = arcade.Sprite("Sprites/Special_cover.png", 1)
         self.cover.center_x = self.view_left + 1100
         self.cover.center_y = self.view_bottom + 680
@@ -529,6 +563,7 @@ class GameView(arcade.View):
         self.cover_4.center_y = self.view_bottom + 720
         self.background_list.append(self.cover_4)
 
+        # tiled map setup
         self.wall_list = arcade.SpriteList()
 
         map_name = "Arena.tmx"
@@ -570,11 +605,13 @@ class GameView(arcade.View):
 
         self.wall_list.append(wall)
 
+        # the player physics engine
         self.physics_engine = \
             arcade.PhysicsEnginePlatformer(self.player,
                                            self.wall_list,
                                            gravity_constant=GRAVITY, )
 
+        # the challenger physics engine
         self.challenger_physics_engine = \
             arcade.PhysicsEnginePlatformer(self.challenger,
                                            self.wall_list,
@@ -594,8 +631,7 @@ class GameView(arcade.View):
         self.player_list.draw()
         self.challenger_list.draw()
 
-        # player health
-
+        # player health bar
         arcade.draw_rectangle_filled(center_x=self.view_left + 100,
                                      center_y=self.view_bottom + 680 + BAR_OFFSET_Y,
                                      width=BAR_WIDTH,
@@ -611,7 +647,6 @@ class GameView(arcade.View):
                                      color=arcade.color.GUPPIE_GREEN)
 
         # challenger health bar
-
         arcade.draw_rectangle_filled(center_x=self.view_left + 1150,
                                      center_y=self.view_bottom + 680 + BAR_OFFSET_Y,
                                      width=BAR_WIDTH,
@@ -626,8 +661,7 @@ class GameView(arcade.View):
                                      height=BAR_HEIGHT,
                                      color=arcade.color.GUPPIE_GREEN)
 
-        # basic attack timers
-
+        # each characters basic attack timers
         bar_width = BAR_WIDTH * (self.player.attack_timer / self.character_info[chosen_1][4])
         arcade.draw_rectangle_filled(center_x=self.view_left + 100 - 0.5 * (BAR_WIDTH - bar_width),
                                      center_y=self.view_bottom + 650 + BAR_OFFSET_Y,
@@ -642,8 +676,7 @@ class GameView(arcade.View):
                                      height=BAR_HEIGHT,
                                      color=arcade.color.BLUE)
 
-        # special attack timers
-
+        # each characters special attack timers
         bar_width = BAR_WIDTH * (-self.player.attack_timer / self.character_info[chosen_1][4])
         arcade.draw_rectangle_filled(center_x=self.view_left + 188 - 0.5 * (BAR_WIDTH - bar_width),
                                      center_y=self.view_bottom + 620 + BAR_OFFSET_Y,
@@ -724,21 +757,21 @@ class GameView(arcade.View):
         else:
             self.challenger.change_x = 0
 
-        # challenger attack
+        # player attack
+        if self.attack_key_pressed:
+            self.player.primary_attack()
 
+        # challenger attack
         if self.challenger_attack_key_pressed:
 
             self.challenger.primary_attack()
-
-        if self.attack_key_pressed:
-            self.player.primary_attack()
 
     def on_key_press(self, key, modifiers):
 
         self.player.on_key_press(key)
         self.challenger.on_key_press(key)
 
-        # player keys
+        # player keys inputs
         if key == arcade.key.W:
             self.up_pressed = True
         elif key == arcade.key.S:
@@ -750,7 +783,7 @@ class GameView(arcade.View):
         elif key == arcade.key.KEY_1:
             self.attack_key_pressed = True
 
-        # challenger keys
+        # challenger keys inputs
         if key == arcade.key.UP:
             self.challenger_up_pressed = True
         elif key == arcade.key.DOWN:
@@ -769,7 +802,7 @@ class GameView(arcade.View):
         self.player.on_key_release(key)
         self.challenger.on_key_release(key)
 
-        # player keys
+        # player keys input resets
         if key == arcade.key.W:
             self.up_pressed = False
 
@@ -782,7 +815,7 @@ class GameView(arcade.View):
         elif key == arcade.key.KEY_1:
             self.attack_key_pressed = False
 
-        # challenger keys
+        # challenger keys input resets
         if key == arcade.key.UP:
             self.challenger_up_pressed = False
 
@@ -809,6 +842,7 @@ class GameView(arcade.View):
         self.challenger_list.update_animation()
         self.challenger_list.update()
 
+        # position updates for the health bar overlays
         self.cover.center_x = self.view_left + 1150
         self.cover.center_y = self.view_bottom + 610
 
@@ -833,6 +867,7 @@ class GameView(arcade.View):
         else:
             self.challenger.can_jump = True
 
+        # attack timer ticking
         if self.player.attack_timer > 0:
             self.player.attack_timer -= 1
 
@@ -849,7 +884,7 @@ class GameView(arcade.View):
             self.challenger_jump_needs_reset = False
             self.challenger_jump_count = 0
 
-        # player damage to challenger
+        # player damage and knock back to challenger
         for bullet in self.player.bullet_list:
             challenger_hit = arcade.check_for_collision_with_list(bullet, self.challenger_list)
             if len(challenger_hit) > 0:
@@ -862,7 +897,7 @@ class GameView(arcade.View):
                     self.challenger.center_x -= self.character_info[self.player.character_type][2]
                     print("moved challenger")
 
-        # challenger damage to player
+        # challenger damage and knock back to player
         for bullet in self.challenger.bullet_list:
             player_hit = arcade.check_for_collision_with_list(bullet, self.player_list)
             if len(player_hit) > 0:
@@ -876,16 +911,18 @@ class GameView(arcade.View):
                     self.player.center_x -= self.character_info[self.challenger.character_type][2]
                     print("moved player")
 
+        # remove bullet if it touched a wall
         for bullet in self.player.bullet_list:
             plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
             if len(plat_hit) > 0:
                 bullet.remove_from_sprite_lists()
-
+        # remove bullet if it touched a wall
         for bullet in self.challenger.bullet_list:
             plat_hit = arcade.check_for_collision_with_list(bullet, self.wall_list)
             if len(plat_hit) > 0:
                 bullet.remove_from_sprite_lists()
 
+        # melee bullets don't move this is need as to trigger knock back correctly bullets still need a change x
         for bullet in self.player.bullet_list:
             if self.player.character_type == 0 or self.player.character_type == 3 or self.player.character_type == 4:
                 if self.player_face_direction == RIGHT_FACING:
@@ -906,7 +943,7 @@ class GameView(arcade.View):
                     if self.ding > 7:
                         self.ding = 0
                         bullet.remove_from_sprite_lists()
-
+        # melee bullets don't move this is need as to trigger knock back correctly bullets still need a change x
         for bullet in self.challenger.bullet_list:
             if self.challenger.character_type == 0 or self.challenger.character_type == 3 \
                     or self.challenger.character_type == 4:
@@ -929,17 +966,16 @@ class GameView(arcade.View):
                     if self.ding > 7:
                         self.ding = 0
                         bullet.remove_from_sprite_lists()
-
+        # player wins view change
         if self.challenger_health == 0 or self.challenger_health < 0:
             win_view = PlayerWinView()
             self.window.show_view(win_view)
-
+        # challenger wins view change
         if self.player_health == 0 or self.player_health < 0:
             win_view = ChallengerWinView()
             self.window.show_view(win_view)
 
         # focusing the screen on the center between the players
-
         if self.challenger.change_x < 0 and self.challenger_face_direction == RIGHT_FACING:
             self.challenger_face_direction = LEFT_FACING
         elif self.challenger.change_x > 0 and self.challenger_face_direction == LEFT_FACING:
@@ -992,6 +1028,7 @@ class GameView(arcade.View):
 
 
 class PlayerWinView(arcade.View):
+    # the player win view
     def __init__(self):
         super().__init__()
         self.title = None
@@ -1012,13 +1049,14 @@ class PlayerWinView(arcade.View):
     def on_draw(self):
 
         arcade.start_render()
-        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 200, 2)
+        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 2)
 
-        arcade.draw_text("Player Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-400, arcade.color.WHITE, font_size=40,
+        arcade.draw_text("Player Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.WHITE, font_size=40,
                          anchor_x="center")
 
 
 class ChallengerWinView(arcade.View):
+    # the challenger win view
     def __init__(self):
         super().__init__()
         self.title = None
@@ -1039,9 +1077,9 @@ class ChallengerWinView(arcade.View):
     def on_draw(self):
 
         arcade.start_render()
-        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 200, 2)
+        self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 2)
 
-        arcade.draw_text("Challenger Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-400, arcade.color.WHITE, font_size=40,
+        arcade.draw_text("Challenger Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.WHITE, font_size=40,
                          anchor_x="center")
 
 
