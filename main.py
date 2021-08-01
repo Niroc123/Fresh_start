@@ -542,17 +542,6 @@ class GameView(arcade.View):
         self.challenger.scale = SPRITE_SCALING_PLAYER
         self.challenger_list.append(self.challenger)
 
-        # all the self.covers are the overlays for the health bars and cool down bars
-        self.cover = arcade.Sprite("Sprites/Special_cover.png", 1)
-        self.cover.center_x = self.view_left + 1100
-        self.cover.center_y = self.view_bottom + 680
-        self.background_list.append(self.cover)
-
-        self.cover_2 = arcade.Sprite("Sprites/Special_cover.png", 1, mirrored=True)
-        self.cover_2.center_x = self.view_left + 100
-        self.cover_2.center_y = self.view_bottom + 680
-        self.background_list.append(self.cover_2)
-
         self.cover_3 = arcade.Sprite("Sprites/Health Bar Cover.png", 1)
         self.cover_3.center_x = self.view_left + 1100
         self.cover_3.center_y = self.view_bottom + 720
@@ -677,19 +666,6 @@ class GameView(arcade.View):
                                      color=arcade.color.BLUE)
 
         # each characters special attack timers
-        bar_width = BAR_WIDTH * (-self.player.attack_timer / self.character_info[chosen_1][4])
-        arcade.draw_rectangle_filled(center_x=self.view_left + 188 - 0.5 * (BAR_WIDTH - bar_width),
-                                     center_y=self.view_bottom + 620 + BAR_OFFSET_Y,
-                                     width=bar_width + 175,
-                                     height=BAR_HEIGHT,
-                                     color=arcade.color.YELLOW)
-
-        bar_width = BAR_WIDTH * (-self.challenger.attack_timer / self.character_info[chosen_2][4])
-        arcade.draw_rectangle_filled(center_x=self.view_left + 1063 + 0.5 * (BAR_WIDTH - bar_width),
-                                     center_y=self.view_bottom + 620 + BAR_OFFSET_Y,
-                                     width=bar_width + 175,
-                                     height=BAR_HEIGHT,
-                                     color=arcade.color.YELLOW)
 
         self.background_list.draw()
 
