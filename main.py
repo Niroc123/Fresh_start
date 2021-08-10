@@ -8,6 +8,10 @@ SCREEN_WIDTH = 1250
 SCREEN_TITLE = "Platform"
 VIEWPORT_MARGIN = 350
 
+global chosen_2
+global chosen_1
+
+
 # the dimensions for the health and cool down bars
 BAR_WIDTH = 175
 BAR_HEIGHT = 20
@@ -42,6 +46,7 @@ class TitleView(arcade.View):
     def __init__(self):
         super().__init__()
         self.title = None
+        self.window.center_window()
 
     def on_show(self):
         arcade.set_background_color((58, 57, 53))
@@ -65,6 +70,7 @@ class Choice1(arcade.View):
 
     def __init__(self):
         super().__init__()
+        self.window.center_window()
         self.title = None
 
         self.Next = None
@@ -200,6 +206,7 @@ class Choice2(arcade.View):
 
     def __init__(self):
         super().__init__()
+        self.window.center_window()
         self.title = None
 
         self.Next = None
@@ -354,13 +361,13 @@ class InstructionView(arcade.View):
         arcade.draw_text("Arrow keys for movement", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 300,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
-        arcade.draw_text("WASD keys for movement", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT - 300,
+        arcade.draw_text("ESDF keys for movement", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT - 300,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
         arcade.draw_text("1  to attack ", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT - 400,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
-        arcade.draw_text("M  to attack", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 400,
+        arcade.draw_text("Period/full stop  to attack", SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT - 400,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
         arcade.draw_text("Click to advance", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 200, arcade.color.WHITE,
@@ -462,13 +469,13 @@ class GameView(arcade.View):
                 0: 3,
                 1: 2,
                 2: 25,
-                3: 30,
+                3: 25,
                 4: 10
             },
          # Shotgun info
          1: {
                 0: 1,
-                1: 1,
+                1: 1.5,
                 2: 10,
                 3: 20,
                 4: 50
@@ -486,7 +493,7 @@ class GameView(arcade.View):
                 0: 2,
                 1: 3,
                 2: 30,
-                3: 25,
+                3: 30,
                 4: 25
             },
          # Spear
@@ -500,11 +507,10 @@ class GameView(arcade.View):
          # Dagger
          5: {
                 0: 3,
-                1: 1,
+                1: 1.5,
                 2: 10,
                 3: 20,
-                4: 10
-
+                4: 15
          }
 
         }
@@ -748,13 +754,13 @@ class GameView(arcade.View):
         self.challenger.on_key_press(key)
 
         # player keys inputs
-        if key == arcade.key.W:
+        if key == arcade.key.E:
             self.up_pressed = True
-        elif key == arcade.key.S:
-            self.down_pressed = True
-        elif key == arcade.key.A:
-            self.left_pressed = True
         elif key == arcade.key.D:
+            self.down_pressed = True
+        elif key == arcade.key.S:
+            self.left_pressed = True
+        elif key == arcade.key.F:
             self.right_pressed = True
         elif key == arcade.key.KEY_1:
             self.attack_key_pressed = True
@@ -768,7 +774,7 @@ class GameView(arcade.View):
             self.challenger_left_pressed = True
         elif key == arcade.key.RIGHT:
             self.challenger_right_pressed = True
-        elif key == arcade.key.M:
+        elif key == arcade.key.PERIOD:
             self.challenger_attack_key_pressed = True
 
         self.process_key_change()
@@ -779,14 +785,13 @@ class GameView(arcade.View):
         self.challenger.on_key_release(key)
 
         # player keys input resets
-        if key == arcade.key.W:
+        if key == arcade.key.E:
             self.up_pressed = False
-
-        elif key == arcade.key.S:
-            self.down_pressed = False
-        elif key == arcade.key.A:
-            self.left_pressed = False
         elif key == arcade.key.D:
+            self.down_pressed = False
+        elif key == arcade.key.S:
+            self.left_pressed = False
+        elif key == arcade.key.F:
             self.right_pressed = False
         elif key == arcade.key.KEY_1:
             self.attack_key_pressed = False
@@ -801,7 +806,7 @@ class GameView(arcade.View):
             self.challenger_left_pressed = False
         elif key == arcade.key.RIGHT:
             self.challenger_right_pressed = False
-        elif key == arcade.key.M:
+        elif key == arcade.key.PERIOD:
             self.challenger_attack_key_pressed = False
 
         self.process_key_change()
@@ -946,10 +951,13 @@ class GameView(arcade.View):
         if self.challenger_health == 0 or self.challenger_health < 0:
             win_view = PlayerWinView()
             self.window.show_view(win_view)
+            print(arcade.get_viewport())
+
         # challenger wins view change
         if self.player_health == 0 or self.player_health < 0:
             win_view = ChallengerWinView()
             self.window.show_view(win_view)
+            print(arcade.get_viewport())
 
         # focusing the screen on the center between the players
         if self.challenger.change_x < 0 and self.challenger_face_direction == RIGHT_FACING:
@@ -1007,6 +1015,7 @@ class PlayerWinView(arcade.View):
     # the player win view
     def __init__(self):
         super().__init__()
+        self.window.center_window()
         self.title = None
 
         self.winner_list = [
@@ -1023,6 +1032,10 @@ class PlayerWinView(arcade.View):
         self.title = arcade.load_texture(f"sprites/Characters/" + self.winner_list[chosen_1] + "/idle.png")
 
     def on_draw(self):
+        arcade.set_viewport(0,
+                            SCREEN_WIDTH + 0,
+                            0,
+                            SCREEN_HEIGHT + 0)
 
         arcade.start_render()
         self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 2)
@@ -1030,11 +1043,18 @@ class PlayerWinView(arcade.View):
         arcade.draw_text("Player Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.WHITE, font_size=40,
                          anchor_x="center")
 
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        character_choice_1 = Choice1()
+        self.window.show_view(character_choice_1)
+        print("x", _x)
+        print("y", _y)
+
 
 class ChallengerWinView(arcade.View):
     # the challenger win view
     def __init__(self):
         super().__init__()
+        self.window.center_window()
         self.title = None
 
         self.winner_list = [
@@ -1051,12 +1071,17 @@ class ChallengerWinView(arcade.View):
         self.title = arcade.load_texture(f"sprites/Characters/" + self.winner_list[chosen_2] + "/idle.png")
 
     def on_draw(self):
+        arcade.set_viewport(0, SCREEN_WIDTH + 0, 0, SCREEN_HEIGHT + 0)
 
         arcade.start_render()
         self.title.draw_scaled(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 2)
 
         arcade.draw_text("Challenger Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.WHITE, font_size=40,
                          anchor_x="center")
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        character_choice_1 = Choice1()
+        self.window.show_view(character_choice_1)
 
 
 def main():

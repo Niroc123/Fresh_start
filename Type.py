@@ -186,13 +186,12 @@ class Character(arcade.Sprite):
 
             }
 
-    def setup(self):  # setting up spritelists so player can detect them
+    def setup(self):  # setting up sprite lists so player can detect them
 
         self.list = [1, 4, 3, 5, 2]
         self.other_list = [-1, 0, 2, 1, -2]
         self.bullet_spread = [-0.2, 0.1, 0, 0.2, -0.1]
 
-        self.special_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.primary_attack = self.list_of_attacks[self.character_type]
 
@@ -398,7 +397,7 @@ class Character(arcade.Sprite):
     def attack6(self):
         # bullet = Bullet()
         if self.attack_timer == 0:
-            self.attack_timer = 10
+            self.attack_timer = 15
             bullet = arcade.Sprite()
 
             bullet.scale = 0.25
@@ -420,4 +419,3 @@ class Character(arcade.Sprite):
                 bullet.change_x = -10
 
             self.bullet_list.append(bullet)
-
