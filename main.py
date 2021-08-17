@@ -1083,7 +1083,10 @@ class ChallengerWinView(arcade.View):
         arcade.draw_text("Challenger Victory", SCREEN_WIDTH/2, SCREEN_HEIGHT/2-200, arcade.color.WHITE, font_size=40,
                          anchor_x="center")
 
-        arcade.draw_text("Click to play again", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 300, arcade.color.WHITE, font_size=20,
+        arcade.draw_text("Click to play again", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 300, arcade.color.WHITE,
+                         font_size=20,
+
+
                          anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
