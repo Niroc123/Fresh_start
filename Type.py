@@ -23,7 +23,7 @@ def load_texture_pair(filename):
 class Character(arcade.Sprite):
     def __init__(self):
         super().__init__()
-        self.xX_SIP_Xx = 0
+        self.attack_animate = 0
         self.cur_texture = 0
         self.cur_attack_texture = 0
         self.character_face_direction = RIGHT_FACING
@@ -239,10 +239,10 @@ class Character(arcade.Sprite):
 
         if not self.attack_pressed:
 
-            self.xX_SIP_Xx += delta_time
+            self.attack_animate += delta_time
 
-            if self.xX_SIP_Xx >= 1/60:
-                self.xX_SIP_Xx = 0
+            if self.attack_animate >= 1/60:
+                self.attack_animate = 0
                 self.cur_attack_texture += 1
                 if self.cur_attack_texture > self.character_attack_num[self.character_type] * ATTACK_UPDATES_PER_FRAME:
                     self.cur_attack_texture = 0
